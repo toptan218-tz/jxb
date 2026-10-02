@@ -1,0 +1,2312 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>历法与奇门定局</title>
+    <script defer src="./vendor/lunar.js"></script>
+    <script defer src="./vendor/iztro.min.js"></script>
+    <script defer src="./data/ke-ying.js?v=20260621"></script>
+    <style>
+      :root {
+        --app-font: "Microsoft YaHei", "PingFang SC", sans-serif;
+        --bg: #f6f3ed;
+        --panel: #ffffff;
+        --ink: #25211d;
+        --muted: #716a61;
+        --line: #ddd4c8;
+        --brand: #8b2f2f;
+        --brand-dark: #672222;
+        --soft: #f2e7d8;
+        --accent: #225c5a;
+        --deep-jade: #0f5b57;
+        --jade-dark: #07504c;
+        --gold: #b88a4b;
+        --pale-gold: #dcc8a0;
+        --paper: #f8f0df;
+        --shadow: 0 1.125rem 2.8125rem rgba(62, 42, 24, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: clamp(87.5%, 3.85vw, 100%);
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--app-font);
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      .shell {
+        width: min(32.5rem, 100%);
+        margin: 0 auto;
+        padding: 0 0 5.375rem;
+      }
+
+      body.qimen-view-active .shell {
+        padding-bottom: 0;
+      }
+
+      header {
+        margin-bottom: 1.375rem;
+      }
+
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: clamp(1.875rem, 5vw, 2.875rem);
+        letter-spacing: 0;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.125rem;
+      }
+
+      .view {
+        display: none;
+      }
+
+      .view.active {
+        display: block;
+      }
+
+      .view:not(#homeView) {
+        width: min(32.5rem, calc(100% - 1.5rem));
+        margin: 0 auto;
+        padding-top: 1.125rem;
+      }
+
+      #homeView {
+        position: relative;
+        min-height: 100vh;
+        background: url("./assets/home-bg.jpg") center top / cover no-repeat;
+      }
+
+      #qimenView {
+        min-height: calc(100vh - 5.375rem);
+        padding: 1.375rem 0.625rem 2.25rem;
+        background:
+          linear-gradient(180deg, rgba(249, 243, 230, 0.18), rgba(249, 243, 230, 0.08) 42%, rgba(249, 243, 230, 0.18)),
+          url("./assets/qimen-home-bg.jpg") center top / 100% auto no-repeat;
+      }
+
+      .bazi-frame-view {
+        height: calc(100vh - 2.25rem);
+        margin: -1.125rem 0 -5.375rem;
+        background: #f3f3f3;
+      }
+
+      .bazi-frame {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #f3f3f3;
+      }
+
+      .home-actions {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+      }
+
+      .nav-card {
+        position: absolute;
+        width: 17%;
+        aspect-ratio: 0.62;
+        min-height: 0;
+        border: 0;
+        border-radius: 1.125rem;
+        background: transparent;
+        box-shadow: none;
+        color: transparent;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .nav-card strong {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .nav-card span {
+        display: block;
+        color: var(--muted);
+        line-height: 1.6;
+        font-weight: 500;
+      }
+
+      #openBazi {
+        left: 32.1%;
+        top: 25.4%;
+      }
+
+      #openQimen {
+        right: 32.1%;
+        top: 25.4%;
+      }
+
+      .author-entry {
+        position: absolute;
+        left: 50%;
+        bottom: max(1.875rem, env(safe-area-inset-bottom));
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        transform: translateX(-50%);
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: #c28d38;
+        padding: 0.75rem 0.625rem;
+        font-family: var(--app-font);
+        font-size: 1.4375rem;
+        font-weight: 400;
+        text-shadow: 0 0.0625rem 0.0625rem rgba(255, 250, 238, 0.5);
+        white-space: nowrap;
+      }
+
+      .author-entry::before,
+      .author-entry::after {
+        content: "";
+        width: clamp(4.5rem, 24vw, 8.125rem);
+        height: 0.0625rem;
+        background: linear-gradient(90deg, transparent, rgba(221, 180, 92, 0.98));
+        box-shadow: 0 0 0.1875rem rgba(221, 180, 92, 0.42);
+      }
+
+      .author-entry::after {
+        transform: scaleX(-1);
+      }
+
+      .author-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        background: rgba(30, 28, 24, 0.34);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 180ms ease, visibility 180ms ease;
+      }
+
+      .author-modal.open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .author-dialog {
+        position: relative;
+        width: min(26.875rem, 100%);
+        max-height: calc(100vh - 2rem);
+        overflow: hidden;
+        border: 1px solid rgba(207, 176, 112, 0.42);
+        border-radius: 0.5rem;
+        background:
+          linear-gradient(180deg, rgba(255, 253, 247, 0.78), rgba(249, 244, 232, 0.7)),
+          url("./assets/author-bg.jpg") center top / cover no-repeat;
+        color: #332c24;
+        padding: 2rem 1.5rem 1.375rem;
+        box-shadow: 0 1.125rem 3.125rem rgba(43, 35, 25, 0.24);
+      }
+
+      .author-close {
+        position: absolute;
+        right: 0.75rem;
+        top: 0.625rem;
+        width: 1.75rem;
+        height: 1.75rem;
+        min-height: 0;
+        border: 1px solid rgba(15, 91, 87, 0.56);
+        border-radius: 50%;
+        background: rgba(255, 252, 244, 0.52);
+        color: var(--deep-jade);
+        padding: 0;
+        font-size: 1.3125rem;
+        font-weight: 300;
+        line-height: 1;
+      }
+
+      .author-dialog h2 {
+        margin: 0 0 1.5rem;
+        color: var(--deep-jade);
+        text-align: center;
+        font-size: 1.875rem;
+        font-weight: 700;
+      }
+
+      .author-section + .author-section {
+        margin-top: 1.375rem;
+        padding-top: 1.25rem;
+        border-top: 1px dashed rgba(207, 176, 112, 0.38);
+      }
+
+      .author-section h3 {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 0 0 0.875rem;
+        color: var(--deep-jade);
+        font-size: 1.4375rem;
+        font-weight: 700;
+      }
+
+      .author-section h3::before {
+        content: "观";
+        display: grid;
+        place-items: center;
+        width: 2.375rem;
+        height: 2.375rem;
+        flex: 0 0 2.375rem;
+        border: 1px solid rgba(207, 176, 112, 0.78);
+        border-radius: 50% 45% 50% 45%;
+        color: rgba(15, 91, 87, 0.74);
+        font-size: 1.0625rem;
+        font-weight: 400;
+      }
+
+      .author-section h3::after {
+        content: "";
+        height: 0.0625rem;
+        flex: 1;
+        background: linear-gradient(90deg, rgba(207, 176, 112, 0.66), transparent);
+      }
+
+      .author-section + .author-section h3::before {
+        content: "友";
+        width: 2rem;
+        height: 2rem;
+        flex-basis: 2rem;
+        font-size: 0.875rem;
+      }
+
+      .author-section p {
+        margin: 0;
+        color: #41372d;
+        font-size: 1rem;
+        line-height: 1.82;
+      }
+
+      .author-contact {
+        display: grid;
+        grid-template-columns: 7.5rem minmax(0, 1fr);
+        gap: 1.25rem;
+        align-items: center;
+        margin-top: 0.875rem;
+        padding: 0.875rem;
+        border: 1px solid rgba(207, 176, 112, 0.48);
+        border-radius: 0.75rem;
+        background: rgba(236, 231, 215, 0.72);
+      }
+
+      .author-qr {
+        display: block;
+        width: 7.5rem;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border: 1px solid rgba(207, 176, 112, 0.58);
+        border-radius: 0.5rem;
+        background: #fff;
+      }
+
+      .author-contact-note {
+        color: var(--deep-jade);
+        font-size: 0.8125rem;
+        line-height: 1.6;
+        white-space: nowrap;
+      }
+
+      .author-contact-button {
+        display: block;
+        width: 82%;
+        margin: 0 auto 0.625rem;
+        border-radius: 62.4375rem;
+        background: var(--deep-jade);
+        color: #fff;
+        padding: 0.4375rem 0.75rem;
+        text-align: center;
+        font-size: 1.125rem;
+        box-shadow: 0 0.25rem 0.75rem rgba(15, 91, 87, 0.18);
+      }
+
+      .page-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+
+      .back-button {
+        flex: 0 0 auto;
+        border: 0;
+        background: transparent;
+        color: #9f773b;
+        padding: 0.5rem 0.625rem;
+        font-size: 1.125rem;
+        font-weight: 400;
+      }
+
+      .panel {
+        position: relative;
+        background:
+          linear-gradient(180deg, rgba(255, 252, 244, 0.88), rgba(250, 243, 226, 0.78)),
+          url("./bazi/assets/card-bg.jpg") right bottom / 100% auto no-repeat;
+        border: 1px solid rgba(207, 176, 112, 0.68);
+        border-radius: 0.625rem;
+        box-shadow: 0 0.1875rem 0.625rem rgba(118, 88, 45, 0.12), inset 0 0 0 0.125rem rgba(255, 250, 238, 0.75);
+        overflow: hidden;
+      }
+
+      #qimenView .panel {
+        min-height: auto;
+        overflow: visible;
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      #qimenView .panel::before {
+        content: none;
+      }
+
+      #qimenView .panel > * {
+        position: relative;
+      }
+
+      .qimen-entry-card,
+      .qimen-main:not(:empty) {
+        position: relative;
+        margin: 0 0.25rem 1.125rem;
+        border: 1px solid rgba(207, 176, 112, 0.82);
+        border-radius: 0.625rem;
+        box-shadow: 0 0.625rem 1.625rem rgba(82, 58, 32, 0.16), inset 0 0 0 0.125rem rgba(255, 250, 238, 0.78);
+      }
+
+      .qimen-entry-card {
+        margin-top: 9.375rem;
+        background:
+          linear-gradient(180deg, rgba(255, 252, 244, 0.9), rgba(250, 243, 226, 0.76)),
+          url("./bazi/assets/card-bg.jpg") right bottom / 100% auto no-repeat;
+      }
+
+      .qimen-main:not(:empty) {
+        background: linear-gradient(180deg, rgba(255, 252, 244, 0.82), rgba(250, 243, 226, 0.62));
+      }
+
+      .qimen-entry-card::before,
+      .qimen-main:not(:empty)::before {
+        content: "";
+        position: absolute;
+        inset: 0.4375rem;
+        border: 1px solid rgba(207, 176, 112, 0.46);
+        border-radius: 0.5rem;
+        pointer-events: none;
+      }
+
+      .panel-head {
+        padding: 2.75rem 1.5rem 0;
+      }
+
+      #qimenView .page-head {
+        position: relative;
+        justify-content: center;
+      }
+
+      #qimenView .back-button {
+        position: absolute;
+        left: -0.75rem;
+        top: -9.625rem;
+        width: 2.75rem;
+        height: 2.75rem;
+        min-height: 2.75rem;
+        border: 1px solid rgba(220, 200, 160, 0.88);
+        border-radius: 50%;
+        background: rgba(255, 252, 244, 0.76);
+        color: var(--deep-jade);
+        padding: 0;
+        font-size: 2.25rem;
+        font-weight: 400;
+        line-height: 1;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 0.1875rem 0.625rem rgba(92, 65, 38, 0.13);
+      }
+
+      #qimenView .panel h2 {
+        position: absolute;
+        left: 50%;
+        top: -8.25rem;
+        margin: 0;
+        transform: translateX(-50%);
+        color: var(--deep-jade);
+        font-size: 2.8125rem;
+        font-weight: 800;
+        line-height: 1.15;
+        white-space: nowrap;
+      }
+
+      #qimenView .panel-head p {
+        display: none;
+      }
+
+      .panel h2 {
+        margin: 0 0 0.375rem;
+        font-size: 1.5rem;
+      }
+
+      .panel p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 0.875rem;
+      }
+
+      .controls {
+        display: grid;
+        gap: 0.75rem;
+        padding: 1.125rem;
+      }
+
+      label {
+        display: grid;
+        gap: 0.4375rem;
+        color: var(--muted);
+        font-size: 0.8125rem;
+        font-weight: 700;
+      }
+
+      input {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 0.4375rem;
+        background: #fff;
+        color: var(--ink);
+        outline: none;
+        padding: 0.6875rem 0.75rem;
+      }
+
+      input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 0.1875rem rgba(34, 92, 90, 0.12);
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 11.875rem;
+        resize: vertical;
+        border: 1px solid var(--line);
+        border-radius: 0;
+        background: #fff;
+        color: var(--ink);
+        outline: none;
+        padding: 0.625rem 0.75rem;
+      }
+
+      textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 0.1875rem rgba(34, 92, 90, 0.12);
+      }
+
+      .actions {
+        display: flex;
+        gap: 0.625rem;
+      }
+
+      button {
+        border: 0;
+        border-radius: 0.4375rem;
+        padding: 0.6875rem 0.875rem;
+        cursor: pointer;
+        font-weight: 760;
+      }
+
+      .primary {
+        flex: 1;
+        background: var(--brand);
+        color: #fff;
+      }
+
+      .primary:hover {
+        background: var(--brand-dark);
+      }
+
+      .ghost {
+        background: var(--soft);
+        color: var(--ink);
+      }
+
+      .result {
+        border-top: 1px solid var(--line);
+        background: #fbfaf7;
+      }
+
+      .item {
+        display: grid;
+        grid-template-columns: 6.875rem 1fr;
+        gap: 0.75rem;
+        padding: 0.875rem 1.125rem;
+        border-top: 1px solid #ece5da;
+        line-height: 1.6;
+      }
+
+      .item:first-child {
+        border-top: 0;
+      }
+
+      .label {
+        color: var(--muted);
+        font-size: 0.8125rem;
+        font-weight: 700;
+      }
+
+      .value {
+        font-size: 1.0625rem;
+        font-weight: 760;
+        word-break: break-word;
+      }
+
+      .qimen-main {
+        padding: 0.75rem 0.75rem 1.125rem;
+        background: transparent;
+        border-top: 0;
+      }
+
+      .qimen-controls {
+        display: grid;
+        gap: 1.125rem;
+        padding: 1.375rem 1.75rem 1.75rem;
+      }
+
+      .qimen-time-picker {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 0.875rem;
+        max-width: 25.625rem;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .qimen-time-picker input {
+        height: 3.125rem;
+        border: 1px solid rgba(207, 176, 112, 0.72);
+        border-radius: 0.5rem;
+        background: rgba(255, 252, 244, 0.88);
+        text-align: center;
+        font-size: 1.25rem;
+        color: #4a4035;
+      }
+
+      .qimen-time-picker input:focus {
+        border-color: var(--deep-jade);
+        box-shadow: 0 0 0 0.1875rem rgba(15, 91, 87, 0.12);
+      }
+
+      .qimen-time-picker input::-webkit-calendar-picker-indicator {
+        display: none;
+      }
+
+      .qimen-time-picker input::-webkit-inner-spin-button,
+      .qimen-time-picker input::-webkit-clear-button {
+        display: none;
+      }
+
+      .qimen-custom-time {
+        width: 6.625rem;
+        height: 3.125rem;
+        border: 1px solid var(--deep-jade);
+        border-radius: 0.5rem;
+        background: transparent;
+        padding: 0;
+        color: var(--deep-jade);
+        font-size: 1.1875rem;
+        font-weight: 400;
+      }
+
+      .qimen-start {
+        position: relative;
+        max-width: 25.625rem;
+        width: 100%;
+        margin: 0 auto;
+        min-height: 3.75rem;
+        border-radius: 0.75rem;
+        border: 1px solid #cfb070;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.08)),
+          radial-gradient(circle at 24% 22%, rgba(255,255,255,0.16), transparent 25%),
+          var(--jade-dark);
+        color: #fff;
+        padding: 0.5rem 1.125rem;
+        font-size: 2.125rem;
+        box-shadow: inset 0 0 0 0.1875rem rgba(246, 228, 171, 0.18), 0 0.25rem 0.625rem rgba(8, 78, 73, 0.18);
+      }
+
+      .qimen-start::before {
+        content: "";
+        position: absolute;
+        inset: 0.375rem 0.5625rem;
+        border: 1px solid rgba(247, 228, 168, 0.86);
+        border-radius: 0.5625rem;
+        pointer-events: none;
+      }
+
+      .qimen-hour-nav {
+        display: grid;
+        grid-template-columns: max-content minmax(11.5rem, 1fr) max-content;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin: 0 0.25rem 0.75rem;
+        padding: 1rem 0 0.75rem;
+        border-bottom: 0;
+        background: transparent;
+      }
+
+      .qimen-hour-nav button {
+        border-radius: 0;
+        background: transparent;
+        color: var(--ink);
+        padding: 0;
+        font-size: clamp(0.88rem, 3.8vw, 0.94rem);
+        font-weight: 400;
+        white-space: nowrap;
+      }
+
+      .qimen-current-time {
+        width: 100%;
+        min-width: 0;
+        text-align: center;
+        color: var(--ink);
+        font-size: clamp(0.78rem, 3.35vw, 0.875rem);
+        white-space: nowrap;
+        border: 1px solid rgba(207, 176, 112, 0.72);
+        border-radius: 62.4375rem;
+        padding: 0.44rem 0.78rem;
+        background: rgba(255, 252, 244, 0.72);
+      }
+
+      .qimen-main .qimen-current-time {
+        color: var(--ink);
+      }
+
+      .qimen-title {
+        display: block;
+        font-size: 1.5rem;
+        margin-bottom: 0.625rem;
+        color: var(--ink);
+        line-height: 1.25;
+        text-align: center;
+      }
+
+      .qimen-main div {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .qimen-summary {
+        margin-bottom: 0.375rem;
+        padding: 0 0.625rem;
+      }
+
+      .qimen-time {
+        margin-bottom: 0.375rem;
+        font-size: 1.0625rem;
+        color: var(--ink);
+      }
+
+      .qimen-time span {
+        color: #1e63d6;
+      }
+
+      .qimen-info-row {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) max-content;
+        gap: 0.625rem;
+        align-items: center;
+      }
+
+      .qimen-methods {
+        display: grid;
+        gap: 0.375rem;
+        justify-self: end;
+      }
+
+      .qimen-method {
+        min-width: 3.625rem;
+        border: 1px solid var(--deep-jade);
+        border-radius: 0.75rem;
+        background: rgba(255, 252, 244, 0.88);
+        color: var(--deep-jade);
+        padding: 0.3125rem 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+      }
+
+      .qimen-hour-nav.archive-viewing {
+        grid-template-columns: minmax(13.75rem, 0.72fr);
+      }
+
+      .qimen-method.active {
+        background: var(--deep-jade);
+        color: #fff;
+      }
+
+      .sizhu-table {
+        border-collapse: collapse;
+        background: rgba(255, 252, 244, 0.82);
+        color: var(--ink);
+        flex: 0 0 auto;
+      }
+
+      .sizhu-table th,
+      .sizhu-table td {
+        border: 1px solid rgba(207, 176, 112, 0.58);
+        width: 2.25rem;
+        height: 1.875rem;
+        text-align: center;
+        font-size: 1.25rem;
+        line-height: 1;
+        font-weight: 400;
+      }
+
+      .sizhu-gan {
+        color: #174fe0;
+      }
+
+      .sizhu-zhi {
+        color: #18855e;
+      }
+
+      .qimen-brief {
+        min-width: 0;
+        font-size: 0.875rem;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        column-gap: 0;
+        row-gap: 0.1875rem;
+        align-items: start;
+      }
+
+      .qimen-brief div {
+        line-height: 1.55;
+      }
+
+      .qimen-jieqi {
+        white-space: nowrap;
+      }
+
+      .qimen-jieqi span {
+        display: block;
+      }
+
+      .qimen-method-note {
+        grid-column: 1 / -1;
+        white-space: nowrap;
+      }
+
+      .qimen-board-wrap {
+        position: relative;
+        width: min(98%, 30rem);
+        margin: 0.5rem auto 1.125rem;
+        padding: 0;
+      }
+
+      .qimen-board {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: repeat(3, minmax(0, 1fr));
+        aspect-ratio: 1 / 1;
+        gap: 0;
+        border: 2px solid rgba(15, 91, 87, 0.82);
+        background:
+          linear-gradient(180deg, rgba(255, 252, 244, 0.9), rgba(250, 243, 226, 0.82)),
+          url("./bazi/assets/card-bg.jpg") right bottom / 100% auto no-repeat;
+        box-shadow: 0 0.1875rem 0.625rem rgba(118, 88, 45, 0.1);
+      }
+
+      .qimen-palace {
+        position: relative;
+        min-height: 0;
+        border: 1px solid rgba(15, 91, 87, 0.72);
+        padding: 0.375rem;
+        overflow: hidden;
+        font-family: var(--app-font);
+        cursor: pointer;
+      }
+
+      .qimen-palace.selected {
+        outline: 0.1875rem solid rgba(15, 91, 87, 0.28);
+        outline-offset: -0.3125rem;
+        background: rgba(255, 250, 238, 0.74);
+      }
+
+      .bagua-watermark {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: rgba(80, 80, 80, 0.2);
+        font-family: var(--app-font);
+        font-size: clamp(2.15rem, 11vw, 2.875rem);
+        font-weight: 400;
+        line-height: 1;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .qimen-palace > :not(.bagua-watermark) {
+        z-index: 1;
+      }
+
+      .dark-stem,
+      .god,
+      .star,
+      .door,
+      .stem-heaven,
+      .stem-earth,
+      .stem-heaven-state,
+      .stem-earth-state,
+      .star-state,
+      .door-state,
+      .earth-god {
+        position: absolute;
+        line-height: 1;
+      }
+
+      .dark-stem {
+        left: 0.42rem;
+        top: 0.42rem;
+        color: var(--stem-color, #444);
+        font-size: clamp(0.72rem, 3.3vw, 0.94rem);
+        font-weight: 800;
+      }
+
+      .god {
+        left: 50%;
+        top: 0.32rem;
+        transform: translateX(-50%);
+        color: #a08120;
+        font-size: clamp(1.25rem, 6.2vw, 1.82rem);
+        font-weight: 900;
+        white-space: nowrap;
+      }
+
+      .star {
+        left: 0.42rem;
+        top: 42%;
+        transform: translateY(-50%);
+        color: #111;
+        font-size: clamp(1.02rem, 5.15vw, 1.38rem);
+        font-weight: 850;
+        white-space: nowrap;
+      }
+
+      .star-state {
+        left: 0.48rem;
+        top: 54%;
+        color: #777;
+        font-size: clamp(0.68rem, 3.05vw, 0.82rem);
+        font-weight: 800;
+      }
+
+      .tian-qin {
+        color: #d02727;
+      }
+
+      .door {
+        left: 0.42rem;
+        bottom: 1.25rem;
+        color: #7357d9;
+        font-size: clamp(1.02rem, 5.15vw, 1.38rem);
+        font-weight: 850;
+        white-space: nowrap;
+      }
+
+      .door-state {
+        left: 0.48rem;
+        bottom: 0.52rem;
+        color: #777;
+        font-size: clamp(0.68rem, 3.05vw, 0.82rem);
+        font-weight: 800;
+      }
+
+      .stem-heaven,
+      .stem-earth {
+        right: 0.48rem;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        color: var(--stem-color, #111);
+        font-size: clamp(1.02rem, 5.15vw, 1.38rem);
+        font-weight: 850;
+      }
+
+      .stem-heaven {
+        top: 42%;
+        transform: translateY(-50%);
+      }
+
+      .stem-earth {
+        bottom: 1.15rem;
+      }
+
+      .stem-heaven-state,
+      .stem-earth-state {
+        right: 0.56rem;
+        color: #777;
+        font-size: clamp(0.68rem, 3.05vw, 0.82rem);
+        font-weight: 800;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+      }
+
+      .stem-heaven-state {
+        top: 54%;
+      }
+
+      .stem-earth-state {
+        bottom: 0.42rem;
+      }
+
+      .stem-horizontal {
+        writing-mode: horizontal-tb;
+        text-orientation: mixed;
+        right: 0.42rem;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .stem-heaven.stem-horizontal {
+        transform: translateY(-50%);
+      }
+
+      .stem-horizontal + .stem-heaven-state,
+      .stem-horizontal + .stem-earth-state {
+        writing-mode: horizontal-tb;
+        text-orientation: mixed;
+        right: 0.42rem;
+        white-space: nowrap;
+      }
+
+      .dark-stem span,
+      .stem-heaven span,
+      .stem-earth span,
+      .center-earth-stem span {
+        color: var(--stem-color, currentColor);
+      }
+
+      .earth-god {
+        left: 50%;
+        bottom: 0.28rem;
+        transform: translateX(-50%);
+        color: #9a2b2b;
+        font-size: clamp(0.66rem, 2.85vw, 0.75rem);
+        font-weight: 850;
+      }
+
+      .outer-marker {
+        position: absolute;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid #111;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+      }
+
+      .outer-marker.horse {
+        width: auto;
+        height: auto;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: #000;
+        font-size: 2rem;
+        line-height: 1;
+        z-index: 3;
+      }
+
+      .center-palace {
+        align-content: center;
+        text-align: center;
+        background: rgba(255, 250, 238, 0.68);
+        display: grid;
+        justify-items: center;
+        gap: 0.35rem;
+        cursor: default;
+      }
+
+      .center-palace strong {
+        font-size: clamp(1rem, 4.5vw, 1.25rem);
+        color: #153bd6;
+      }
+
+      .center-palace span {
+        display: block;
+        margin-top: 0;
+        color: var(--ink);
+        font-weight: 700;
+        font-size: clamp(0.82rem, 3.6vw, 1rem);
+        line-height: 1.35;
+      }
+
+      .center-palace .center-earth-stem {
+        position: static;
+        transform: none;
+        margin-top: 0.125rem;
+        color: var(--stem-color, var(--ink));
+        font-size: clamp(0.82rem, 3.6vw, 1rem);
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .error {
+        color: #9b1c1c;
+        padding: 1.125rem;
+        line-height: 1.7;
+      }
+
+      .keying-panel {
+        margin: 0.75rem 0 0;
+        padding: 1rem;
+        border: 1px solid rgba(207, 176, 112, 0.68);
+        border-radius: 0.5rem;
+        background:
+          linear-gradient(180deg, rgba(255, 252, 244, 0.88), rgba(250, 243, 226, 0.78)),
+          url("./bazi/assets/card-bg.jpg") right bottom / 100% auto no-repeat;
+        box-shadow: 0 0.1875rem 0.625rem rgba(118, 88, 45, 0.1), inset 0 0 0 0.125rem rgba(255, 250, 238, 0.75);
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+
+      .keying-panel h3 {
+        margin: 0 0 0.625rem;
+        font-size: 1.25rem;
+      }
+
+      .keying-section {
+        padding-top: 0.625rem;
+        margin-top: 0.625rem;
+        border-top: 1px solid #eee4d7;
+      }
+
+      .keying-section:first-of-type {
+        border-top: 0;
+        margin-top: 0;
+        padding-top: 0;
+      }
+
+      .keying-section strong {
+        display: block;
+        margin-bottom: 0.375rem;
+        font-size: 1.0625rem;
+        color: var(--ink);
+      }
+
+      .keying-entry {
+        margin: 0.375rem 0;
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 1rem;
+      }
+
+      .keying-entry b {
+        color: var(--brand);
+      }
+
+      .qimen-footnote {
+        margin-top: 0;
+        padding: 0 0.375rem;
+        color: var(--ink);
+        font-weight: 700;
+        line-height: 1.45;
+      }
+
+      .special-panel {
+        margin: 0.75rem 0 0;
+        padding: 0.75rem 0.875rem;
+        border: 1px solid rgba(207, 176, 112, 0.64);
+        border-radius: 0.5rem;
+        background: rgba(255, 250, 238, 0.78);
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 1rem;
+      }
+
+      .special-panel b {
+        color: var(--brand);
+      }
+
+      .archive-info-panel {
+        margin: 0.75rem 0 0;
+        padding: 0.875rem 1rem;
+        border: 1px solid rgba(207, 176, 112, 0.64);
+        border-radius: 0.5rem;
+        background: rgba(255, 250, 238, 0.82);
+        color: var(--ink);
+        display: grid;
+        gap: 0.625rem;
+      }
+
+      .archive-info-row {
+        display: grid;
+        grid-template-columns: 4.375rem minmax(0, 1fr);
+        gap: 0.625rem;
+        align-items: start;
+        line-height: 1.55;
+      }
+
+      .archive-info-row b {
+        color: var(--brand);
+      }
+
+      .archive-info-row span {
+        min-width: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .qimen-patterns-entry {
+        min-height: 3rem;
+        border: 1px solid rgba(207, 176, 112, 0.78);
+        border-radius: 0.5rem;
+        background: rgba(255, 252, 244, 0.7);
+        color: var(--deep-jade);
+        font-size: 1.25rem;
+        box-shadow: 0 0.1875rem 0.625rem rgba(92, 65, 38, 0.1);
+      }
+
+      .patterns81-page {
+        min-height: calc(100vh - 5.375rem);
+        padding: 1.125rem 0.875rem 2.875rem;
+        background:
+          linear-gradient(180deg, rgba(249, 243, 230, 0.28), rgba(249, 243, 230, 0.72)),
+          url("./assets/qimen-home-bg.jpg") center top / 100% auto no-repeat,
+          #f5efe2;
+      }
+
+      .patterns81-head {
+        display: grid;
+        grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
+        align-items: center;
+        max-width: 47.5rem;
+        min-height: 3.625rem;
+        margin: 0 auto 1.5rem;
+        padding-bottom: 0.625rem;
+        border-bottom: 1px solid rgba(207, 176, 112, 0.72);
+      }
+
+      .patterns81-head h2 {
+        margin: 0;
+        color: var(--deep-jade);
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .patterns81-selector-card,
+      .patterns81-result-card {
+        position: relative;
+        max-width: 47.5rem;
+        margin-right: auto;
+        margin-left: auto;
+        border: 1px solid rgba(207, 176, 112, 0.76);
+        border-radius: 0.5rem;
+        background:
+          linear-gradient(180deg, rgba(255, 253, 247, 0.94), rgba(250, 245, 233, 0.9)),
+          url("./bazi/assets/card-bg.jpg") right bottom / 100% auto no-repeat;
+        box-shadow: 0 0.5rem 1.375rem rgba(92, 65, 38, 0.12), inset 0 0 0 0.125rem rgba(255, 250, 238, 0.72);
+      }
+
+      .patterns81-selector-card {
+        padding: 1.375rem 1.125rem 1.5rem;
+      }
+
+      .patterns81-grid {
+        display: grid;
+        grid-template-columns: 2.25rem repeat(9, minmax(0, 1fr));
+        column-gap: 0.25rem;
+        row-gap: 0.75rem;
+        align-items: center;
+      }
+
+      .patterns81-alias {
+        min-width: 0;
+        color: #a5824d;
+        text-align: center;
+        font-size: 0.8125rem;
+        line-height: 1.2;
+        white-space: nowrap;
+      }
+
+      .patterns81-axis-label {
+        align-self: stretch;
+        display: grid;
+        place-items: center;
+        color: var(--deep-jade);
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.05;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+      }
+
+      .patterns81-stem {
+        position: relative;
+        min-width: 0;
+        height: 3rem;
+        border: 1px solid transparent;
+        border-radius: 0.4375rem;
+        background: transparent;
+        color: var(--stem-color);
+        padding: 0;
+        font-size: 1.9375rem;
+        font-weight: 700;
+        line-height: 1;
+        transition: transform 150ms ease, background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+      }
+
+      .patterns81-stem.active {
+        border-color: rgba(207, 176, 112, 0.9);
+        background: rgba(197, 224, 213, 0.56);
+        box-shadow: 0 0.1875rem 0.625rem rgba(15, 91, 87, 0.1);
+        transform: scale(1.04);
+      }
+
+      .patterns81-stem.active::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 0.25rem;
+        width: 1rem;
+        height: 0.125rem;
+        transform: translateX(-50%);
+        background: rgba(184, 138, 75, 0.88);
+      }
+
+      .patterns81-result-card {
+        display: grid;
+        justify-items: center;
+        align-content: start;
+        max-width: 32.5rem;
+        min-height: 21.875rem;
+        margin-top: 1.5rem;
+        padding: 1.875rem 1.75rem 2rem;
+        text-align: center;
+      }
+
+      .patterns81-pair {
+        display: grid;
+        grid-template-rows: 3.875rem 0.0625rem 3.875rem;
+        justify-items: center;
+        align-items: center;
+        gap: 0.5rem;
+        width: 4.75rem;
+        height: 8.8125rem;
+      }
+
+      .patterns81-pair-stem {
+        display: grid;
+        place-items: center;
+        width: 4.75rem;
+        height: 3.875rem;
+        color: var(--stem-color);
+        font-size: 3.625rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .patterns81-pair-line {
+        width: 3.375rem;
+        height: 0.0625rem;
+        background: rgba(184, 138, 75, 0.82);
+      }
+
+      .patterns81-pattern-name {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        min-height: 2.75rem;
+        margin: 1.25rem 0 0;
+        color: #2c2924;
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.3;
+      }
+
+      .patterns81-summary,
+      .patterns81-detail {
+        max-width: 27.5rem;
+        margin: 1rem 0 0;
+        color: #514a40;
+        font-size: 1.375rem;
+        line-height: 1.75;
+        white-space: pre-wrap;
+      }
+
+      .patterns81-detail {
+        margin-top: 0.625rem;
+        color: #6c6255;
+        font-size: 1.25rem;
+      }
+
+      .archive-page {
+        min-height: calc(100vh - 7.5rem);
+        padding: 1.75rem 1.125rem 2.125rem;
+        background:
+          linear-gradient(180deg, rgba(249, 243, 230, 0.54), rgba(249, 243, 230, 0.24) 52%, rgba(249, 243, 230, 0.34)),
+          url("./bazi/assets/input-bg.jpg") center top / cover no-repeat;
+      }
+
+      .archive-page .query-head {
+        height: 5.375rem;
+        grid-template-columns: 3.875rem 1fr 3.875rem;
+        background: transparent;
+      }
+
+      .archive-page .query-back {
+        width: 2.75rem;
+        height: 2.75rem;
+        min-height: 2.75rem;
+        border: 1px solid rgba(220, 200, 160, 0.88);
+        border-radius: 50%;
+        background: rgba(255, 252, 244, 0.76);
+        color: var(--deep-jade);
+        font-size: 2.25rem;
+        font-weight: 400;
+        box-shadow: 0 0.1875rem 0.625rem rgba(92, 65, 38, 0.13);
+      }
+
+      .archive-page .query-title {
+        position: relative;
+        color: #111;
+        font-size: 2.375rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .archive-page .query-title::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -0.875rem;
+        width: 9.25rem;
+        height: 0.0625rem;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, transparent, rgba(184, 138, 75, 0.78), transparent);
+      }
+
+      .archive-form {
+        position: relative;
+        display: grid;
+        gap: 1.5rem;
+        max-width: 26.25rem;
+        margin: 1.75rem auto 0;
+        padding: 2.125rem 1.5rem 1.875rem;
+        border: 1px solid rgba(207, 176, 112, 0.7);
+        border-radius: 1.5rem;
+        background:
+          linear-gradient(180deg, rgba(255, 252, 244, 0.9), rgba(250, 243, 226, 0.74)),
+          url("./bazi/assets/card-bg.jpg") right bottom / 100% auto no-repeat;
+        box-shadow: 0 0.75rem 1.875rem rgba(92, 65, 38, 0.16), inset 0 0 0 0.125rem rgba(255, 250, 238, 0.78);
+        text-align: left;
+      }
+
+      .archive-form::before {
+        content: "";
+        position: absolute;
+        inset: 0.5rem;
+        border: 1px solid rgba(207, 176, 112, 0.38);
+        border-radius: 1.25rem;
+        pointer-events: none;
+      }
+
+      .archive-form label {
+        display: grid;
+        gap: 0.875rem;
+        color: var(--deep-jade);
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .archive-form label::before {
+        content: none;
+      }
+
+      .archive-form input,
+      .archive-form textarea {
+        border: 1px solid rgba(207, 176, 112, 0.76);
+        border-radius: 0.625rem;
+        background: rgba(255, 252, 244, 0.72);
+        color: #4a4035;
+        text-align: left;
+        font-size: 1.375rem;
+        box-shadow: inset 0 0.0625rem 0 rgba(255, 255, 255, 0.68);
+      }
+
+      .archive-form input {
+        height: 3.625rem;
+        padding: 0 1.375rem;
+      }
+
+      .archive-form textarea {
+        min-height: 11.125rem;
+        padding: 1.125rem 1.375rem;
+        resize: vertical;
+      }
+
+      .archive-form input::placeholder,
+      .archive-form textarea::placeholder {
+        color: rgba(100, 100, 100, 0.38);
+      }
+
+      .archive-form .primary {
+        justify-self: center;
+        min-width: 11.5rem;
+        min-height: 3.875rem;
+        flex: 0 0 auto;
+        margin-top: 0.5rem;
+        border-radius: 0.75rem;
+        border: 1px solid #cfb070;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.08)),
+          radial-gradient(circle at 24% 22%, rgba(255,255,255,0.16), transparent 25%),
+          var(--jade-dark);
+        color: #fff;
+        font-size: 1.9375rem;
+        padding: 0.5rem 2.125rem;
+        box-shadow: inset 0 0 0 0.1875rem rgba(246, 228, 171, 0.18), 0 0.25rem 0.625rem rgba(8, 78, 73, 0.18);
+      }
+
+      .archive-message {
+        min-height: 1.375rem;
+        color: var(--brand);
+        font-size: 0.875rem;
+        text-align: center;
+      }
+
+      .query-page {
+        min-height: calc(100vh - 7.5rem);
+        background:
+          linear-gradient(180deg, rgba(249, 243, 230, 0.72), rgba(249, 243, 230, 0.54)),
+          url("./bazi/assets/input-bg.jpg") center top / cover no-repeat;
+      }
+
+      #queryView {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+      }
+
+      #archiveList {
+        touch-action: pan-y;
+      }
+
+      .query-head {
+        position: relative;
+        display: grid;
+        grid-template-columns: 3.125rem 1fr 3.125rem;
+        align-items: center;
+        height: 3.375rem;
+        background: transparent;
+      }
+
+      .query-back {
+        width: 2.75rem;
+        height: 2.75rem;
+        min-height: 2.75rem;
+        border: 1px solid rgba(220, 200, 160, 0.88);
+        border-radius: 50%;
+        background: rgba(255, 252, 244, 0.76);
+        color: var(--deep-jade);
+        padding: 0;
+        font-size: 2.25rem;
+        font-weight: 400;
+        line-height: 1;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 0.1875rem 0.625rem rgba(92, 65, 38, 0.13);
+      }
+
+      .query-title {
+        margin: 0;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      .query-toolbar {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.875rem;
+        align-items: center;
+        padding: 0.125rem 1.125rem 0.75rem;
+        background: transparent;
+      }
+
+      .query-select {
+        border-radius: 0;
+        background: transparent;
+        color: #111;
+        padding: 0;
+        font-size: 1.25rem;
+        font-weight: 500;
+      }
+
+      .query-select.active {
+        color: #111;
+      }
+
+      .query-toolbar input {
+        height: 2.375rem;
+        border: 1px solid rgba(207, 176, 112, 0.78);
+        border-radius: 0.5rem;
+        background: rgba(255, 252, 244, 0.72);
+        color: var(--ink);
+        padding: 0.3125rem 0.875rem;
+        text-align: left;
+        font-size: 1.125rem;
+      }
+
+      .query-delete {
+        border-radius: 0;
+        background: transparent;
+        color: #111;
+        padding: 0;
+        font-size: 1.25rem;
+        font-weight: 500;
+      }
+
+      .query-delete:disabled {
+        color: #111;
+        opacity: 1;
+        cursor: pointer;
+      }
+
+      .archive-table {
+        width: calc(100% - 2.25rem);
+        margin: 0.75rem 1.125rem;
+        border-collapse: collapse;
+        table-layout: fixed;
+        background: rgba(255, 252, 244, 0.78);
+      }
+
+      .archive-name-col {
+        width: 58%;
+      }
+
+      .archive-time-col {
+        width: 42%;
+      }
+
+      .archive-select-col {
+        width: 1.875rem;
+      }
+
+      .archive-table.select-mode .archive-name-col {
+        width: calc(58% - 1.875rem);
+      }
+
+      .archive-table th,
+      .archive-table td {
+        border-bottom: 1px solid #d5d5d5;
+        padding: 0.6875rem 0.25rem;
+        text-align: left;
+        font-size: 1.25rem;
+        font-weight: 400;
+      }
+
+      .archive-table th {
+        font-size: 1.5rem;
+        color: var(--ink);
+      }
+
+      .archive-table th:last-child,
+      .archive-table td:last-child {
+        text-align: right;
+        padding-right: 1em;
+      }
+
+      .archive-table tr {
+        cursor: pointer;
+      }
+
+      .archive-table tbody tr.selected {
+        background: rgba(15, 91, 87, 0.08);
+      }
+
+      .archive-check-cell {
+        width: 1.875rem;
+        padding-right: 0.5rem;
+        padding-left: 0;
+      }
+
+      .archive-check {
+        display: inline-grid;
+        place-items: center;
+        width: 1.125rem;
+        height: 1.125rem;
+        border: 1px solid #777;
+        border-radius: 50%;
+        color: transparent;
+        font-size: 0.8125rem;
+        line-height: 1;
+      }
+
+      .archive-table tbody tr.selected .archive-check {
+        border-color: var(--deep-jade);
+        background: var(--deep-jade);
+        color: #fff;
+      }
+
+      .empty-row {
+        padding: 1.5rem 1.125rem;
+        color: var(--muted);
+      }
+
+      .bottom-menu {
+        position: relative;
+        left: auto;
+        bottom: auto;
+        z-index: 20;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: min(28.875rem, calc(100% - 2.75rem));
+        margin: 1.125rem auto 1.125rem;
+        transform: none;
+        border: 1px solid rgba(207, 176, 112, 0.7);
+        border-radius: 0.5rem;
+        background:
+          linear-gradient(180deg, rgba(255, 252, 244, 0.88), rgba(250, 243, 226, 0.8)),
+          url("./bazi/assets/card-bg.jpg") right bottom / 100% auto no-repeat;
+        box-shadow: 0 0.1875rem 0.625rem rgba(118, 88, 45, 0.12), inset 0 0 0 0.125rem rgba(255, 250, 238, 0.75);
+        backdrop-filter: blur(0.125rem);
+      }
+
+      .bottom-menu::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 0.75rem;
+        bottom: 0.75rem;
+        width: 0.0625rem;
+        background: var(--pale-gold);
+      }
+
+      .bottom-menu.hidden {
+        display: none;
+      }
+
+      .bottom-menu button {
+        border-radius: 0;
+        background: transparent;
+        color: var(--deep-jade);
+        padding: 0.8125rem 0.625rem 0.9375rem;
+        font-size: 1.5rem;
+        font-weight: 400;
+      }
+
+      .bottom-menu button.active {
+        color: var(--deep-jade);
+      }
+
+      @media (max-width: 47.5rem) {
+        .author-entry {
+          bottom: max(1.375rem, env(safe-area-inset-bottom));
+          gap: 0.625rem;
+          padding: 0.625rem 0.5rem;
+          font-size: 1.3125rem;
+        }
+
+        .author-entry::before,
+        .author-entry::after {
+          width: clamp(4rem, 23vw, 7rem);
+        }
+
+        .author-modal {
+          padding: 1.125rem;
+        }
+
+        .author-dialog {
+          max-height: calc(100vh - 1.5rem);
+          padding: 1.75rem 1.125rem 1.125rem;
+          border-radius: 0.5rem;
+        }
+
+        .author-dialog h2 {
+          font-size: 1.5625rem;
+        }
+
+        .author-section h3 {
+          font-size: 1.3125rem;
+        }
+
+        .author-section p {
+          font-size: 0.9375rem;
+          line-height: 1.75;
+        }
+
+        .author-contact {
+          grid-template-columns: 6.5rem minmax(0, 1fr);
+          gap: 0.75rem;
+          padding: 0.75rem;
+        }
+
+        .author-qr {
+          width: 6.5rem;
+        }
+
+        .author-contact-note {
+          font-size: 0.75rem;
+        }
+
+        .author-contact-button {
+          margin-bottom: 0.4375rem;
+          padding: 0.375rem 0.5625rem;
+          font-size: 1rem;
+        }
+
+        .view:not(#homeView) {
+          width: min(32.5rem, 100%);
+          padding-top: 0;
+        }
+
+        #qimenView {
+          padding: 1.125rem 0.5625rem 1.875rem;
+        }
+
+        #qimenView .panel {
+          min-height: auto;
+        }
+
+        .qimen-entry-card,
+        .qimen-main:not(:empty) {
+          margin-left: 0;
+          margin-right: 0;
+        }
+
+        .panel-head {
+          padding: 2.25rem 1.125rem 0;
+        }
+
+        #qimenView .panel h2 {
+          font-size: 2.5rem;
+          top: -7.125rem;
+        }
+
+        #qimenView .panel-head p {
+          display: none;
+        }
+
+        #qimenView .back-button {
+          left: -0.625rem;
+          top: -8.25rem;
+          width: 2.75rem;
+          height: 2.75rem;
+          min-height: 2.75rem;
+          padding: 0;
+          font-size: 2.25rem;
+        }
+
+        .qimen-entry-card {
+          margin-top: 8.375rem;
+        }
+
+        .qimen-controls {
+          padding: 1.125rem 1.125rem 1.5rem;
+        }
+
+        .qimen-start {
+          min-height: 3.375rem;
+          font-size: 1.9375rem;
+        }
+
+        .archive-page {
+          padding: 1.375rem 0.75rem 1.75rem;
+        }
+
+        .archive-page .query-head {
+          height: 4.875rem;
+          grid-template-columns: 3.5rem 1fr 3.5rem;
+        }
+
+        .archive-page .query-back {
+          width: 2.75rem;
+          height: 2.75rem;
+          min-height: 2.75rem;
+          font-size: 2.25rem;
+        }
+
+        .archive-page .query-title {
+          font-size: 2.125rem;
+        }
+
+        .patterns81-page {
+          min-height: 100vh;
+          padding: 0.75rem 0.5625rem 2.25rem;
+        }
+
+        .patterns81-head {
+          margin-bottom: 1.125rem;
+        }
+
+        .patterns81-head h2 {
+          font-size: 1.75rem;
+        }
+
+        .patterns81-selector-card {
+          padding: 1.125rem 0.625rem 1.25rem;
+        }
+
+        .patterns81-grid {
+          grid-template-columns: 1.75rem repeat(9, minmax(0, 1fr));
+          column-gap: 0.0625rem;
+          row-gap: 0.625rem;
+        }
+
+        .patterns81-alias {
+          font-size: 0.625rem;
+        }
+
+        .patterns81-axis-label {
+          font-size: 0.875rem;
+        }
+
+        .patterns81-stem {
+          height: 2.75rem;
+          font-size: 1.5625rem;
+        }
+
+        .patterns81-result-card {
+          min-height: 20.625rem;
+          margin-top: 1.125rem;
+          padding: 1.75rem 1.125rem 1.875rem;
+        }
+
+        .patterns81-pair-stem {
+          font-size: 3.375rem;
+        }
+
+        .patterns81-pattern-name {
+          font-size: 1.5625rem;
+        }
+
+        .patterns81-summary {
+          font-size: 1.2rem;
+        }
+
+        .archive-form {
+          gap: 1.375rem;
+          margin-top: 1.375rem;
+          padding: 1.875rem 1.25rem 1.75rem;
+          border-radius: 1.375rem;
+        }
+
+        .archive-form label {
+          gap: 0.875rem;
+          font-size: 1.5625rem;
+        }
+
+        .archive-form input,
+        .archive-form textarea {
+          font-size: 1.25rem;
+        }
+
+        .archive-form input {
+          height: 3.375rem;
+          padding: 0 1.125rem;
+        }
+
+        .archive-form textarea {
+          min-height: 10rem;
+          padding: 1rem 1.125rem;
+        }
+
+        .archive-form .primary {
+          min-width: 10.625rem;
+          min-height: 3.625rem;
+          font-size: 1.8125rem;
+        }
+
+        .item {
+          grid-template-columns: 1fr;
+          gap: 0.25rem;
+        }
+
+        header {
+          margin-bottom: 1rem;
+        }
+
+        h1 {
+          font-size: 2.125rem;
+        }
+
+        .subtitle {
+          font-size: 0.875rem;
+        }
+
+        .qimen-main {
+          padding: 0.5rem 0.375rem 1rem;
+        }
+
+        .qimen-hour-nav {
+          grid-template-columns: auto minmax(11.875rem, 0.72fr) auto;
+          gap: 0.375rem;
+          margin: -0.25rem 0 0.75rem;
+        }
+
+        .qimen-current-time {
+          padding: 0.4375rem 0rem;
+          font-size: 0.8125rem;
+        }
+
+        .qimen-title {
+          font-size: 1.5rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .qimen-time {
+          font-size: 1rem;
+        }
+
+        .qimen-info-row {
+          grid-template-columns: auto minmax(0, 1fr) max-content;
+          gap: 0.5rem;
+        }
+
+        .qimen-summary {
+          padding: 0 0.375rem;
+        }
+
+        .qimen-methods {
+          grid-column: auto;
+          grid-template-columns: 1fr;
+        }
+
+        .qimen-method {
+          min-width: 3rem;
+          padding: 0.25rem 0.375rem;
+          font-size: 0.8125rem;
+        }
+
+        .sizhu-table th,
+        .sizhu-table td {
+          width: 1.9375rem;
+          height: 1.75rem;
+          font-size: 1.125rem;
+        }
+
+        .qimen-brief {
+          font-size: 0.8125rem;
+          column-gap: 0.5rem;
+        }
+
+        .qimen-board-wrap {
+          width: min(98%, 30rem);
+          margin-bottom: 0.875rem;
+          padding: 0;
+        }
+
+        .qimen-palace {
+          min-height: 0;
+          padding: 0.28rem;
+        }
+
+        .bagua-watermark {
+          font-size: clamp(1.9rem, 9.5vw, 2.38rem);
+        }
+
+        .star {
+          font-size: clamp(0.92rem, 4.75vw, 1.25rem);
+        }
+
+        .door {
+          font-size: clamp(0.92rem, 4.75vw, 1.25rem);
+        }
+
+        .god {
+          font-size: clamp(1.08rem, 5.75vw, 1.56rem);
+        }
+
+        .stem-heaven,
+        .stem-earth {
+          font-size: clamp(0.92rem, 4.75vw, 1.25rem);
+        }
+
+        .star-state,
+        .door-state,
+        .stem-heaven-state,
+        .stem-earth-state {
+          font-size: clamp(0.62rem, 3vw, 0.78rem);
+        }
+
+        .dark-stem {
+          font-size: clamp(0.66rem, 3.1vw, 0.84rem);
+        }
+
+        .earth-god {
+          font-size: clamp(0.58rem, 2.7vw, 0.72rem);
+        }
+      }
+
+      @media (max-height: 43.75rem) {
+        .author-dialog {
+          padding-top: 1.5rem;
+          padding-bottom: 0.875rem;
+        }
+
+        .author-dialog h2 {
+          margin-bottom: 1rem;
+          font-size: 1.4375rem;
+        }
+
+        .author-section + .author-section {
+          margin-top: 0.875rem;
+          padding-top: 0.875rem;
+        }
+
+        .author-section h3 {
+          margin-bottom: 0.625rem;
+          font-size: 1.1875rem;
+        }
+
+        .author-section p {
+          font-size: 0.875rem;
+          line-height: 1.62;
+        }
+
+        .author-contact {
+          margin-top: 0.625rem;
+          padding: 0.625rem;
+        }
+
+        .author-qr {
+          width: 5.625rem;
+        }
+
+        .author-contact {
+          grid-template-columns: 5.625rem minmax(0, 1fr);
+        }
+      }
+
+      .query-back,
+      #qimenView .back-button {
+        color: transparent;
+        font-size: 0;
+      }
+
+      .query-back {
+        position: relative;
+      }
+
+      .query-back::before,
+      #qimenView .back-button::before {
+        content: "‹";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        color: var(--deep-jade);
+        font-family: var(--app-font);
+        font-size: 2rem;
+        font-weight: 400;
+        line-height: 1;
+        transform: translate(-50%, -56%);
+        pointer-events: none;
+      }
+    </style>
+  <link rel="stylesheet" href="./simple.css?v=20260929-login-consent-removed">
+</head>
+  <body>
+    <main class="shell">
+      <section id="loginView" class="view active" aria-labelledby="loginTitle">
+        <div class="login-page">
+          <button class="login-back" id="loginBack" type="button" aria-label="暂不登录，返回首页">‹</button>
+          <header class="login-identity">
+            <h1 id="loginTitle">观道</h1>
+          </header>
+          <form class="login-form" id="loginForm" novalidate>
+            <label class="login-field">
+              <span>手机号</span>
+              <input id="loginPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" aria-label="手机号" />
+            </label>
+            <label class="login-field login-code-field">
+              <span>验证码</span>
+              <input id="loginCode" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" aria-label="验证码" />
+              <button id="sendLoginCode" type="button">获取验证码</button>
+            </label>
+            <p class="login-error" id="loginError" role="alert" aria-live="polite"></p>
+            <button class="login-submit" type="submit">登录</button>
+            <p class="login-auto-note">未注册手机号将自动创建账号</p>
+          </form>
+        </div>
+      </section>
+
+      <section id="homeView" class="view">
+        <div class="home-actions">
+          <button class="nav-card" id="openBazi" type="button">
+            <strong>观己</strong>
+          </button>
+          <button class="nav-card" id="openQimen" type="button">
+            <strong>观局</strong>
+          </button>
+        </div>
+        <button class="author-entry" id="openAuthorModal" type="button">作者的话</button>
+      </section>
+
+      <section id="baziView" class="view">
+        <section class="bazi-frame-view">
+          <iframe class="bazi-frame" src="./bazi/index.html" title="四柱干支历"></iframe>
+          <div hidden>
+            <input id="calendarDate" type="datetime-local" />
+            <button id="queryCalendar" type="button"></button>
+            <button id="calendarNow" type="button"></button>
+            <div id="calendarResult"></div>
+          </div>
+        </section>
+      </section>
+
+      <section id="qimenView" class="view">
+        <section class="panel">
+            <header class="panel-head">
+              <div class="page-head">
+                <h2>遁甲干支历</h2>
+                <button class="back-button" type="button" data-qimen-back aria-label="返回上一级">‹</button>
+              </div>
+              <p>默认是此时此刻，也可以手动选择时间。</p>
+            </header>
+          <div class="qimen-entry-card">
+            <div class="qimen-controls">
+              <div class="qimen-time-picker">
+                <input id="qimenDateTime" type="datetime-local" step="60" />
+                <button class="qimen-custom-time" id="qimenCustomTime" type="button">选择时间</button>
+              </div>
+              <button class="qimen-start" id="calcQimen" type="button">起局</button>
+              <button class="qimen-patterns-entry" id="openPatterns81" type="button">八十一格局</button>
+            </div>
+          </div>
+          <div id="qimenResult" class="qimen-main"></div>
+        </section>
+      </section>
+
+      <section id="patterns81View" class="view">
+        <section class="patterns81-page">
+          <header class="patterns81-head">
+            <button class="query-back" id="closePatterns81" type="button" aria-label="返回观局">‹</button>
+            <h2>八十一格局</h2>
+            <span aria-hidden="true"></span>
+          </header>
+          <section class="patterns81-selector-card" aria-label="天盘干和地盘干选择">
+            <div class="patterns81-grid" id="patterns81Selector"></div>
+          </section>
+          <section class="patterns81-result-card" id="patterns81Result" aria-live="polite"></section>
+        </section>
+        <div style="position: fixed;bottom: 1.5rem;text-align: center;margin: 0 auto;width: 100%;font-size: 0.8rem;color: gray;">八十一格局解读部分引自《奇门遁甲上元经校释》</div>
+
+      </section>
+
+      <section id="archiveView" class="view">
+        <section class="archive-page">
+          <div class="query-head">
+            <button class="query-back" type="button" data-source-back aria-label="返回上一级">‹</button>
+            <h2 class="query-title">存档</h2>
+            <span aria-hidden="true"></span>
+          </div>
+          <form class="archive-form" id="archiveForm">
+            <label>
+              姓名
+              <input id="archivePerson" type="text" autocomplete="off" placeholder="请输入" />
+            </label>
+            <button class="primary" type="submit">存档</button>
+            <div class="archive-message" id="archiveMessage"></div>
+          </form>
+        </section>
+      </section>
+
+      <section id="queryView" class="view">
+        <section class="query-page">
+          <div class="query-head">
+            <button class="query-back" type="button" data-query-back aria-label="返回上一级">‹</button>
+            <h2 class="query-title">历史记录</h2>
+            <span aria-hidden="true"></span>
+          </div>
+          <div class="query-toolbar">
+            <button class="query-select" id="selectArchiveMode" type="button">选择</button>
+            <input id="archiveSearch" type="search" placeholder="搜索姓名" />
+          </div>
+          <div id="archiveList"></div>
+          <button class="query-delete" id="deleteArchive" type="button">删除</button>
+        </section>
+      </section>
+    </main>
+
+    <nav class="bottom-menu hidden" aria-label="存档查询">
+      <button id="openArchive" type="button">存档</button>
+      <button id="openQuery" type="button">查询</button>
+    </nav>
+    <div class="author-modal" id="authorModal" aria-hidden="true">
+      <article class="author-dialog" role="dialog" aria-modal="true" aria-labelledby="authorModalTitle">
+        <button class="author-close" id="closeAuthorModal" type="button" aria-label="关闭">×</button>
+        <h2 id="authorModalTitle">墨仆观道</h2>
+        <section class="author-section">
+          <h3>作者的话</h3>
+          <p>
+            我想做的，不是替人下结论的工具，也不是迎合焦虑的答案。<br />
+            观己，是明心见性，是帮助人看见自己的力量，节奏与边界；<br />
+            观局，是洞察趋势，是帮助人看清局势的关系，状态与时机。<br />
+            时间会留下规律，<br />
+            古人将岁月流转凝练为干支之序，成为记录规律的语言，<br />
+            干支历不是答案，是一种看见答案的方式。
+          </p>
+        </section>
+        <section class="author-section">
+          <h3>欢迎交流</h3>
+          <p>如果你有关于产品的建议、合作，或有疑惑需要进一步交流，可以与我联系。</p>
+          <div class="author-contact">
+            <img class="author-qr" src="./assets/author-qr.jpg" alt="联系作者二维码" />
+            <div class="author-contact-note">
+              <span class="author-contact-button">联系我</span>
+              产品建议 · 合作交流 · 深入沟通
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+    <script defer src="./simple.js?v=20260930-api-domain"></script>
+<script defer src="./app-root.js?v=20260930-api-domain"></script>
+  </body>
+</html>
+

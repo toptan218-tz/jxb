@@ -1,0 +1,337 @@
+:root{--bg:#fcfbf7;--page:#fcfbf7;--paper:#fcfbf7;--card:#fcfbf7;--panel:#fcfbf7;--text:#173c39;--ink:#173c39;--muted:#778079;--line:#dedfd5;--gold:#97703d;--pale-gold:#dedfd5;--brand:#173c39;--brand-dark:#204b45;--deep-jade:#173c39;--jade-dark:#173c39;--accent:#a94432;--soft:#eef0e7;--teal:#617a71;--danger:#a94432;--shadow:none}
+body{background:var(--page);color:var(--ink)}
+#homeView{background:var(--page)!important}
+body .phone,body[data-page] .phone,#loginView,#homeView,#qimenView,.query-page,.duiyuan-page,.archive-page,.query-page,.patterns81-page{background:var(--page)!important}
+body .phone::before,body .phone::after,body .profile-card::before,body .profile-card::after,.entry-panel::before,.entry-panel::after,.submit-button::before,.submit-button::after,.qimen-entry-card::before,.qimen-main::before,.panel::before{display:none!important}
+body .card,body[data-page] .card,.entry-panel,.panel,.archive-form,.patterns81-selector-card,.patterns81-result-card,.author-dialog,.query-item,.duiyuan-summary,.qimen-entry-card,.qimen-main:not(:empty){background:var(--page)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:12px}
+body[data-page] .profile-card,body[data-page] .profile-card p,body[data-page] .profile-card b,body[data-page] .profile-line,body[data-page] #solarCalcLine{color:var(--ink)!important}
+body[data-page] .profile-card{font-size:15px;padding:18px;line-height:1.85}
+body .topbar,body[data-page] .topbar,.input-backbar,.query-backbar,.duiyuan-head{background:var(--page)!important;color:var(--ink);border-bottom:1px solid var(--line);backdrop-filter:none}
+h1,h2,.simple-home-title,.simple-choice strong{font-family:'Noto Serif CJK SC','Songti SC','SimSun',serif;font-weight:500!important}
+body[data-page] .entry-panel{margin-top:32px;padding:24px 18px}
+body button,body input,body select,body textarea{box-shadow:none!important}
+body input,body textarea,body select,.entry-row input,.entry-value,.manual-time-field input,.query-search input,.query-toolbar input{background:var(--page)!important;border-color:var(--line)!important;color:var(--ink)}
+.entry-panel .submit-button,.gender-card.active,.duiyuan-button,.qimen-start,.primary{background:#dce2d2!important;color:var(--ink)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:28px}
+.qimen-start::before,.qimen-start::after{display:none}
+body .query-item{background:#f4f4ed!important;border:0!important;min-height:76px}
+body .query-item.selected,.archive-table tbody tr.selected{background:#eaede2!important}
+body .query-item.selected .query-check{background:#ae5947;border-color:#ae5947}
+.archive-table{background:transparent;border-collapse:separate;border-spacing:0 8px;width:calc(100% - 24px);margin:12px}
+.archive-table td{background:#f1f2e9;border:0;padding:14px 8px;font-size:15px}.archive-table th{border:0;font-size:16px;font-weight:400}
+.archive-table td:first-child{border-radius:9px 0 0 9px}.archive-table td:last-child{border-radius:0 9px 9px 0}
+.archive-check{border-color:#8b9388}.archive-table tbody tr.selected .archive-check{background:#ae5947;border-color:#ae5947}
+body[data-page] .chart-card{padding:16px 10px 10px;overflow-x:auto}
+body[data-page] .chart-grid{grid-template-columns:60px repeat(var(--pillar-count,4),minmax(52px,1fr));row-gap:12px;min-width:280px}
+body[data-page] .chart-grid::after{display:none!important;content:none!important}
+body[data-page] .pillar-label{writing-mode:horizontal-tb;min-height:28px;min-width:0;border:0;background:#f1f1e9;padding:4px;font-size:15px}
+body[data-page] .big-char{font-weight:500;text-shadow:none;font-size:40px}
+body[data-page] .big-char,
+body[data-page] .hidden-stem>span:first-child,
+body[data-page] .timeline-ganzhi,
+body[data-page] .query-pillars b,
+body[data-page] .duiyuan-branch{font-family:'Noto Serif CJK SC','Songti SC','SimSun',serif;font-weight:700!important}
+body .small-score{font-size:14px;line-height:1.9;color:var(--ink)}
+body .row-title,body .side-title{font-size:18px;font-weight:500}
+body .cell{font-size:16px}body .fortune-score-cell{font-size:14px;gap:5px}
+body[data-page] .fortune-window{max-height:none;overflow:visible;background:transparent;border:0;margin:0 10px}
+body[data-page] .fortune-tier{min-height:0}
+body[data-page] .fortune-section-title{background:transparent;font-size:18px;font-weight:500;line-height:24px;padding:5px 8px}
+body[data-page] .timeline-item{background:transparent;border-color:var(--line);position:relative;min-height:86px;padding:14px 4px 8px}
+body[data-page] .timeline-item.active{background:#edf0e7;color:var(--ink)}
+body[data-page] .timeline-item.active .timeline-top{color:var(--ink)}
+body[data-page] .timeline-item::before{content:'';position:absolute;top:5px;left:calc(50% - 3px);width:6px;height:6px;border-radius:50%;background:#a8ada5}
+body[data-page] .timeline-item.active::before{background:#ad4937;width:8px;height:8px}
+body[data-page] .timeline-ganzhi{display:flex;flex-direction:row;justify-content:center;align-items:center;gap:2px;white-space:nowrap;font-size:20px;font-weight:500;line-height:1.2;margin-top:4px}
+body[data-page] .timeline-item .timeline-ganzhi .el-木{color:var(--wood)}
+body[data-page] .timeline-item .timeline-ganzhi .el-火{color:var(--fire)}
+body[data-page] .timeline-item .timeline-ganzhi .el-土{color:var(--earth)}
+body[data-page] .timeline-item .timeline-ganzhi .el-金{color:var(--metal)}
+body[data-page] .timeline-item .timeline-ganzhi .el-水{color:var(--water)}
+.simple-fortune-nav{display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);z-index:25;background:var(--page);border-top:1px solid var(--line);padding:8px 12px max(10px,env(safe-area-inset-bottom));grid-template-columns:repeat(3,1fr)}
+body[data-page=chart] .simple-fortune-nav{display:grid}
+.simple-fortune-nav button{position:relative;background:transparent;border:0;color:var(--ink);min-height:48px;font-size:20px}
+.simple-fortune-nav button[aria-pressed=true]::after{content:'';position:absolute;bottom:0;left:calc(50% - 3px);width:6px;height:6px;background:#ad4937;border-radius:50%}
+body[data-page=chart] .result-area{padding-bottom:92px}.fortune-tier,.chart-card{scroll-margin-top:72px}
+.simple-home{display:flex;min-height:100svh;flex-direction:column;justify-content:flex-start;padding:17svh 18px 40px;gap:8svh}
+.simple-home-title{display:flex;align-items:center;justify-content:center;gap:28px;text-align:center;font-size:18px;margin:0;color:var(--ink);font-weight:400!important;letter-spacing:.34em;white-space:nowrap}
+.simple-home-title i{display:block;width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:var(--accent)}
+.simple-home-choices{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.simple-choice{background:transparent;border:0;padding:0;text-align:center;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:28px;cursor:pointer}
+.simple-choice strong{font-size:34px;letter-spacing:4px}
+.simple-symbol{--symbol-paper:#f4f2ed;--symbol-line:#99958d;--symbol-dot:#7b7770;position:relative;display:block;width:100%;aspect-ratio:1;overflow:hidden;border:0;border-radius:50%;background:var(--symbol-paper)}
+.simple-symbol.right{border-radius:0}
+.simple-symbol svg{display:block;width:100%;height:100%;pointer-events:none}
+.simple-symbol .symbol-lines{fill:none;stroke:var(--symbol-line);stroke-width:.85}
+.simple-symbol .symbol-dots{fill:var(--symbol-dot)}
+.simple-symbol .symbol-center{fill:var(--accent)}
+.simple-choice{font-weight:400}.simple-home{box-sizing:border-box}
+.simple-choice p,.simple-choice .enter{font-weight:400}
+.simple-history-tabs{display:flex;justify-content:center;align-items:center;gap:24px;min-height:64px}
+.simple-history-tabs button{position:relative;background:transparent;border:0;color:var(--ink);font:22px 'SimSun',serif;padding:10px 4px 18px;min-height:44px}
+.simple-history-tabs span{color:var(--line)}
+.simple-history-tabs button[aria-pressed=true]::after{content:'';position:absolute;bottom:5px;left:calc(50% - 3px);width:6px;height:6px;background:var(--accent);border-radius:50%}
+body .query-page{grid-template-rows:64px 68px 58px minmax(0,1fr) 64px}
+body .query-backbar,body .query-page>.query-head:not(:has(input)){display:flex;height:68px;padding:0 18px;gap:10px;border:0;background:transparent!important}
+body .query-backbar h2,body .query-title{font-size:28px;text-align:left;flex:1;color:var(--ink)}
+body .query-backbar>button:first-child,body .query-page>.query-head>.query-back{width:28px;min-width:28px;border:0;background:transparent;padding:0}
+body .query-backbar #toggleQuerySelect,body .query-page #selectArchiveMode{font:16px sans-serif;min-height:36px;width:auto;border:1px solid var(--line);border-radius:24px;padding:4px 18px;color:var(--ink)}
+body .query-page>.query-head:has(input),body .query-toolbar{display:block;height:58px;padding:6px 18px}
+body .query-toolbar input{width:100%;height:44px;font-size:16px}
+.simple-history-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:10px 18px;color:var(--muted);font-size:14px;background:var(--page)}
+body .simple-history-footer #queryDeleteTop,body .simple-history-footer #deleteArchive{border:1px solid var(--line);border-radius:24px;padding:6px 24px;min-height:38px;font-size:16px;color:var(--ink)}
+body .simple-history-footer button:disabled{opacity:.4;cursor:not-allowed}
+#queryView .query-page{display:grid;min-height:calc(100svh - 64px)}
+#queryView #archiveList{min-height:120px}
+body .archive-table tbody tr.selected td{background:#e7ebdf}
+body .query-name-line strong{font-weight:500;color:var(--ink);font-size:18px}
+body .query-sex{color:var(--ink);background:#e3e8dc}
+body .query-list{margin-inline:16px}
+body .query-item.selected .query-check::after{display:none}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+:root{--fire:#c54c36;--earth:#b58a29;--metal:#4b78b4;--water:#000}
+/* Shared water-element treatment, including Qimen's inline stem token. */
+[style*="--stem-color:#155487"]{--stem-color:#000!important}
+.sizhu-table .simple-water{color:var(--water)!important}
+.qimen-board,.qimen-board *{font-family:'SimSun','Songti SC','Noto Serif CJK SC',serif;font-weight:400}
+.qimen-footnote{display:flex;flex-wrap:wrap;column-gap:24px;row-gap:6px;padding:8px 6px;font-weight:400}
+.qimen-footnote>span{white-space:nowrap}
+body .entry-panel .submit-button,body .duiyuan-button,body .home-tabbar button{font-weight:400}
+#qimenView>.panel{border:0!important;border-radius:0;padding-inline:12px;background:var(--page)!important}
+#qimenView>.panel::after,.back-button::before,.back-button::after{display:none!important}
+.qimen-main:not(:empty){margin-left:-8px!important;margin-right:-8px!important;padding-left:0!important;padding-right:0!important}
+.qimen-board-wrap{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important}
+.qimen-board{width:100%;aspect-ratio:1/1;background:var(--page)!important;border:1px solid #4f8078;box-shadow:none}
+.qimen-palace{width:100%;height:100%;aspect-ratio:1/1;border:.5px solid #4f8078;font-family:'SimSun','宋体','Songti SC',serif!important}
+.qimen-palace.selected{background:#eef0e7;outline:1px solid #a94432;outline-offset:-2px}
+.bagua-watermark{opacity:.4}
+.keying-panel,.special-panel,.archive-info-panel,.patterns81-selector-card,.patterns81-result-card,.time-dialog,.location-dialog{background:var(--page)!important;border-color:var(--line)!important;box-shadow:none!important}
+.qimen-patterns-entry,.qimen-custom-time,.qimen-time-label,.sizhu-table td,.sizhu-table th{border-color:var(--line)!important;background:var(--page)}
+.sizhu-table td,
+.qimen-palace .dark-stem,
+.qimen-palace .dark-stem span,
+.qimen-palace .stem-heaven,
+.qimen-palace .stem-heaven span,
+.qimen-palace .stem-earth,
+.qimen-palace .stem-earth span,
+.qimen-palace .center-earth-stem,
+.qimen-palace .center-earth-stem span{font-family:'SimSun','宋体','Songti SC',serif!important;font-weight:700!important}
+.outer-marker.kong{border-color:#4f8078;background:var(--page)}
+.qimen-method.active{background:#a94432!important;border-color:#a94432!important;color:#fff!important}
+.qimen-start{font-size:24px;font-weight:500}
+body .duiyuan-circle{background:#f2f3eb;box-shadow:none;border-color:var(--line)}
+.timeline-item:disabled{opacity:.45;cursor:not-allowed}
+body .back-button{font-size:30px!important;color:var(--ink)!important;text-indent:0!important}
+.qimen-controls{padding:20px 16px;gap:14px}
+.qimen-time-picker{grid-template-columns:minmax(0,1fr) 76px;gap:8px}
+.qimen-time-picker input{font-size:15px;padding-inline:8px}
+.qimen-custom-time{width:76px;font-size:14px}
+body[data-page] #editPanel{border:0!important;background:transparent!important;padding-inline:10px}
+body .entry-panel{border:0!important}
+body .entry-row>span,body .entry-value{font-weight:400;color:var(--ink)}
+body .gender-card{background:var(--page);border:1px solid var(--line);border-radius:22px;color:var(--ink)}
+body .picker-panel{background:var(--page);border:1px solid var(--line);box-shadow:none}
+body .calendar-toggle button.active,body .picker-actions button:last-child{background:#e0e6d8;color:var(--ink);border-color:var(--line)}
+body .duiyuan-circle{background:transparent}
+body .duiyuan-branch,body .duiyuan-tabs button{border-color:var(--line);background:var(--page);color:var(--ink)}
+body .duiyuan-branch.active,body .duiyuan-tabs button.active{background:#e5eade;color:var(--ink);box-shadow:inset 0 -2px #ad4937!important}
+body .duiyuan-branch.active,body .duiyuan-branch.related{background:var(--deep-jade)!important;color:#fff!important;border-color:var(--deep-jade)!important;box-shadow:none!important}
+.chart-card::after{display:none!important;content:none!important}
+/* The terminal eight-pillar state must fit in one viewport. */
+body[data-page] .chart-card.has-added-pillars{padding-inline:4px;overflow-x:hidden}
+body[data-page] .chart-card.has-added-pillars .chart-grid{grid-template-columns:48px repeat(var(--pillar-count),minmax(0,1fr));min-width:0;column-gap:0;row-gap:8px}
+body[data-page] .chart-card.has-added-pillars .side-title,body[data-page] .chart-card.has-added-pillars .row-title{font-size:15px}
+body[data-page] .chart-card.has-added-pillars .small-score{font-size:12px;line-height:1.75}
+body[data-page] .chart-card.has-added-pillars .pillar-label{min-width:0;width:calc(100% - 6px);min-height:27px;padding:3px 0;font-size:13px;white-space:nowrap}
+body[data-page] .chart-card.has-added-pillars .cell{font-size:13px;line-height:1.15}
+body[data-page] .chart-card.has-added-pillars .hidden-vertical{min-height:58px;gap:0}
+body[data-page] .chart-card.has-added-pillars .hidden-vertical .hidden-stem{min-width:0;gap:0;font-size:12px}
+body[data-page] .chart-card.has-added-pillars .hidden-vertical .hidden-stem small{font-size:9px;margin-left:0}
+body[data-page] .chart-card.has-added-pillars .fortune-score-cell{font-size:12px;gap:3px}
+body[data-page] .chart-card.has-added-pillars .remove-pillar{width:20px;height:20px;min-height:20px}
+body[data-page] .chart-card.has-added-pillars .cols-5 .big-char{font-size:34px}
+body[data-page] .chart-card.has-added-pillars .cols-6 .big-char{font-size:32px}
+body[data-page] .chart-card.has-added-pillars .cols-7 .big-char{font-size:30px}
+body[data-page] .chart-card.has-added-pillars .cols-8 .big-char{font-size:28px}
+body[data-page] .chart-card.has-eight-pillars{padding-inline:4px;overflow-x:hidden}
+body[data-page] .chart-card.has-eight-pillars::after{display:none;content:none}
+body[data-page] .chart-grid.cols-8{grid-template-columns:48px repeat(8,minmax(0,1fr));min-width:0;column-gap:0;row-gap:8px}
+body[data-page] .cols-8::after{left:calc(48px + (100% - 48px)/2)}
+body[data-page] .cols-8 .side-title,body[data-page] .cols-8 .row-title{font-size:15px}
+body[data-page] .cols-8 .small-score{font-size:12px;line-height:1.75}
+body[data-page] .cols-8 .pillar-label{min-width:0;width:calc(100% - 6px);min-height:27px;padding:3px 0;font-size:13px;white-space:nowrap}
+body[data-page] .cols-8 .big-char{font-size:28px;line-height:1.05}
+body[data-page] .cols-8 .cell{font-size:13px;line-height:1.15}
+body[data-page] .cols-8 .hidden-vertical{min-height:58px;gap:0}
+body[data-page] .cols-8 .hidden-vertical .hidden-stem{min-width:0;gap:0;font-size:12px}
+body[data-page] .cols-8 .hidden-vertical .hidden-stem small{font-size:9px;margin-left:0}
+body[data-page] .cols-8 .fortune-score-cell{font-size:12px;gap:3px}
+body[data-page] .cols-8 .remove-pillar{width:20px;height:20px;min-height:20px}
+.simple-choice:hover .simple-symbol{filter:brightness(.985)}
+button:focus-visible,a:focus-visible{outline:2px solid #a94432!important;outline-offset:3px}
+.simple-author{display:none}
+#homeView .author-entry{display:none}
+/* Keep navigation in normal flow, separate from the form card border. */
+#qimenView .panel-head{padding:8px 4px 12px}
+#qimenView .page-head{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;min-height:52px;gap:8px}
+#qimenView .panel h2{position:static;grid-column:2;grid-row:1;transform:none;margin:0;font-size:24px;line-height:1.35;text-align:center;white-space:normal}
+#qimenView .back-button{position:static;grid-column:1;grid-row:1;transform:none;width:44px;height:44px;min-height:44px;border:0;border-radius:12px;background:transparent}
+#qimenView .qimen-entry-card{margin-top:0}
+/* Quiet grouped controls and consistent hit areas across utility pages. */
+body .qimen-entry-card,body .qimen-main:not(:empty),body .patterns81-selector-card,body .patterns81-result-card{border-radius:16px}
+body .qimen-controls{padding:16px;gap:12px}
+body .qimen-time-picker input,body .qimen-custom-time,body .qimen-patterns-entry{min-height:44px;height:44px;border-radius:10px}
+body .qimen-start{min-height:48px;border-radius:14px;font-size:20px;font-weight:500}
+body .qimen-patterns-entry{font-size:17px;font-weight:500;background:#f0f2ea}
+body .entry-value,body .entry-row input,body .query-search input,body .query-toolbar input{min-height:44px;border-radius:10px}
+body .input-backbar,body .topbar,body .duiyuan-head{min-height:56px}
+body .query-backbar>button:first-child,body .query-page>.query-head>.query-back{min-width:44px;width:44px;min-height:44px}
+body .picker-actions button,body .simple-history-footer button{min-height:44px}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+@media(hover:hover){.qimen-custom-time:hover,.qimen-patterns-entry:hover,.back-button:hover{background:#e9ede3}}
+button:not(:disabled):active{filter:brightness(.96)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #6e8c83;outline-offset:2px}
+.bottom-menu{background:var(--page);box-shadow:none;border-color:var(--line)}
+.author-dialog{overflow-y:auto}.author-contact{background:#eef0e7;border-color:var(--line)}
+@media(max-width:360px){.simple-home{padding-inline:14px;gap:7svh}.simple-home-choices{gap:14px}.simple-choice{gap:24px}.simple-choice strong{font-size:30px}.simple-home-title{gap:18px;font-size:16px}}
+
+/* Login — faithful to the approved warm-white, ink-green reference. */
+#loginView{width:100%;max-width:none;margin:0;padding:0!important;min-height:100svh}
+body.login-active .shell{padding-bottom:0!important}
+.login-page{position:relative;box-sizing:border-box;width:min(100%,520px);min-height:100svh;margin:0 auto;padding:clamp(28px,7svh,62px) 30px max(28px,env(safe-area-inset-bottom));display:flex;flex-direction:column;color:var(--ink);background:var(--page)}
+.login-back{position:absolute;top:max(38px,env(safe-area-inset-top));left:8px;width:44px;height:44px;padding:0;border:0;background:transparent;color:var(--ink);font:300 48px/38px Arial,sans-serif;text-align:center;cursor:pointer}
+.login-identity{margin-top:clamp(66px,8.5svh,76px);text-align:center}
+.login-identity h1{margin:0;font-family:'Noto Serif CJK SC','Songti SC','SimSun',serif;font-size:48px;font-weight:500;line-height:1.15;letter-spacing:7px;color:var(--ink)}
+.login-identity p,.login-ornament{display:none!important}
+.login-form{margin-top:clamp(36px,8svh,72px)}
+.login-field{display:grid;grid-template-columns:96px minmax(0,1fr);align-items:center;min-height:74px;border-bottom:1px solid var(--line);font-family:'Noto Serif CJK SC','Songti SC','SimSun',serif;color:#52666c}
+.login-field>span{font-size:20px;letter-spacing:2px}
+.login-field input{width:100%;height:48px;box-sizing:border-box;border:0!important;background:transparent!important;font:400 18px/1.4 system-ui,-apple-system,'Microsoft YaHei',sans-serif;color:var(--ink);outline:0;padding:0}
+.login-code-field{grid-template-columns:96px minmax(0,1fr) auto}
+.login-code-field button{height:44px;min-width:112px;padding:0 0 0 18px;border:0;border-left:1px solid var(--line);background:transparent;color:var(--ink);font:400 17px/1.2 'Noto Serif CJK SC','Songti SC','SimSun',serif;cursor:pointer}
+.login-code-field button:disabled{color:var(--muted);cursor:default}
+.login-error{min-height:22px;margin:8px 4px 2px;color:#a94432;font-size:13px}
+.login-submit{width:100%;min-height:50px;border:0;border-radius:7px;background:#124b46;color:#fff;font:400 22px/1 'Noto Serif CJK SC','Songti SC','SimSun',serif;letter-spacing:4px;cursor:pointer}
+.login-auto-note{margin:16px 0 0;text-align:center;color:var(--muted);font-size:14px;letter-spacing:1px}
+@media(max-height:720px){.login-page{padding-top:20px}.login-identity{margin-top:64px}.login-identity h1{font-size:46px}.login-form{margin-top:24px}.login-field{min-height:64px}}
+@media(max-width:360px){.login-page{padding-inline:22px}.login-identity h1{font-size:46px}.login-field{grid-template-columns:82px minmax(0,1fr)}.login-code-field{grid-template-columns:82px minmax(0,1fr) auto}.login-code-field button{min-width:96px;padding-left:10px;font-size:15px}}
+
+.archive-call-feedback{position:fixed;left:50%;bottom:5.5rem;z-index:1200;max-width:calc(100vw - 3rem);padding:.7rem 1.25rem;border-radius:999px;background:rgba(14,75,70,.94);color:#fff;font-size:.95rem;line-height:1.3;box-shadow:0 .5rem 1.5rem rgba(23,48,45,.16);opacity:0;pointer-events:none;transform:translate(-50%,.5rem);transition:opacity 160ms ease,transform 160ms ease}
+.archive-call-feedback.show{opacity:1;transform:translate(-50%,0)}
+.archive-call-feedback.error{background:rgba(169,68,50,.96)}
+
+.manual-time-input{position:relative;display:block;min-width:0}
+.manual-time-input #manualDateTime{box-sizing:border-box;width:100%;padding-right:2.75rem}
+.manual-time-input #clearManualDateTime{position:absolute;top:50%;right:.45rem;width:2rem;height:2rem;padding:0;border:0;border-radius:50%;background:transparent;color:#7d8580;font:400 1.35rem/2rem system-ui,-apple-system,sans-serif;text-align:center;transform:translateY(-50%);cursor:pointer}
+.manual-time-input #clearManualDateTime:active{background:rgba(79,128,120,.1);color:#0e4b46}
+
+/* Keep the four-pillar input workflow within a typical phone viewport. */
+body[data-page="input"] .input-backbar{height:52px;min-height:52px}
+body[data-page="input"] .input-backbar h1{font-size:22px}
+body[data-page="input"] #editPanel{padding-top:0!important;padding-bottom:10px!important}
+body[data-page="input"] .entry-panel{margin-top:10px;padding:18px 16px 14px;gap:11px}
+body[data-page="input"] .entry-row{gap:10px;font-size:16px}
+body[data-page="input"] .entry-row input,body[data-page="input"] .entry-value{height:40px;min-height:40px}
+body[data-page="input"] .gender-card{min-height:34px}
+body[data-page="input"] .true-solar-row{min-height:30px}
+body[data-page="input"] .entry-panel .submit-button{height:46px;min-height:46px;margin-top:0;font-size:22px}
+body[data-page="input"] .home-tabbar,body[data-page="input"] .home-tabbar button{min-height:44px;height:44px}
+body[data-page="input"] .input-duiyuan-panel{margin-top:12px;gap:5px}
+body[data-page="input"] .duiyuan-button{height:44px;min-height:44px;font-size:20px}
+@media(max-height:700px){body[data-page="input"] .entry-panel{margin-top:6px;padding-block:14px 10px;gap:8px}body[data-page="input"] .input-duiyuan-panel{margin-top:8px}body[data-page="input"] .duiyuan-note{font-size:11px}}
+
+/* Keep the four-pillar title bar identical before and after chart creation. */
+body .input-backbar,
+body .topbar{
+  box-sizing:border-box;
+  height:52px;
+  min-height:52px;
+  grid-template-columns:52px minmax(0,1fr) 52px;
+  margin-bottom:10px;
+  padding-inline:4px;
+}
+body .input-backbar h1,
+body .topbar h1{
+  min-width:0;
+  font-size:22px;
+  line-height:1.2;
+  white-space:nowrap;
+}
+body .input-back-button,
+body .topbar .icon-button{
+  justify-self:center;
+  width:44px;
+  height:44px;
+  min-height:44px;
+}
+
+/* Leave breathing room below the host browser chrome on every Bazi subpage. */
+body .input-backbar,
+body .topbar,
+body .query-backbar,
+body .duiyuan-head{
+  box-sizing:border-box;
+  padding-top:20px;
+}
+body .input-backbar,
+body .topbar{height:72px;min-height:72px}
+body[data-page="input"] .input-backbar,
+body[data-page="chart"] .topbar{height:72px;min-height:72px}
+body .query-backbar{height:88px;min-height:88px}
+body .duiyuan-head{height:76px;min-height:76px}
+body .simple-history-tabs{box-sizing:border-box;min-height:84px;padding-top:20px}
+body .query-page{grid-template-rows:84px 88px 58px minmax(0,1fr) 64px}
+
+/* Keep both primary actions on the same 326 × 44px visual standard. */
+body[data-page="input"] .entry-panel .submit-button,
+body[data-page="input"] .duiyuan-button{
+  width:min(326px,calc(100% - 24px));
+  height:44px;
+  min-height:44px;
+  margin-top:0;
+  font-size:20px;
+}
+
+/* Prevent long province/city names from expanding the picker past the viewport. */
+body .picker-panel{
+  box-sizing:border-box;
+  max-width:calc(100vw - 24px);
+  overflow-x:hidden;
+}
+body .place-wheel{
+  width:100%;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+}
+body .place-wheel select{
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  padding-inline:4px;
+  text-overflow:ellipsis;
+}
+
+/* Membership detail shares the app's warm paper and deep green palette. */
+body .duiyuan-tabs button.locked{background:#eeeae2;color:#aaa9a4;cursor:pointer}
+body .duiyuan-tabs button.locked:focus-visible{outline:2px solid var(--deep-jade);outline-offset:-3px}
+body .fortune-score-cell.locked,body .fortune-score-cell.locked span{color:#b7b7b2!important}
+.paywall-page{box-sizing:border-box;position:fixed;inset:0;z-index:60;width:min(480px,100%);margin:auto;padding:32px 16px max(28px,env(safe-area-inset-bottom));overflow-y:auto;background:var(--page);color:#073c43;font-family:'Songti SC','SimSun',serif}
+.paywall-page.hidden{display:none}
+.paywall-close{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;background:transparent;color:#073c43;font:400 38px/1 Arial,sans-serif}
+.paywall-intro{text-align:center;margin:48px 0 34px}
+.paywall-intro h2{margin:0 0 10px;font-size:clamp(38px,10vw,52px);font-weight:600;letter-spacing:.02em}
+.paywall-intro p{margin:0;font-size:clamp(14px,4vw,18px);line-height:1.5}
+.paywall-table{overflow:hidden;border:1px solid #d7dcd8;border-radius:8px;background:rgba(255,255,255,.46)}
+.paywall-row{display:grid;grid-template-columns:minmax(104px,1.35fr) repeat(3,minmax(0,1fr));min-height:57px;align-items:stretch}
+.paywall-row+.paywall-row{border-top:1px solid #dce3e0}
+.paywall-row>*{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;padding:5px 2px;border-left:1px solid #e0e6e3;text-align:center;font-size:clamp(13px,3.5vw,17px)}
+.paywall-row>*:first-child{align-items:flex-start;border-left:0;padding-left:10px;text-align:left;font-size:clamp(13px,3.5vw,17px)}
+.paywall-row>*:last-child{background:rgba(219,239,233,.45)}
+.paywall-heading{min-height:83px;font-weight:600}
+.paywall-heading>*{font-size:clamp(16px,4.1vw,20px)}
+.paywall-heading small{margin-top:8px;font-size:clamp(13px,3.5vw,18px);font-weight:400;white-space:nowrap}
+.paywall-row .unavailable{color:#b4b8b6}
+.paywall-note{margin:18px 8px 22px;text-align:center;font-size:12px;line-height:1.6}
+.paywall-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.paywall-actions button{min-height:62px;padding:6px 2px;border:1px solid #376071;border-radius:32px;background:transparent;color:#073c43;font-family:inherit;font-size:clamp(13px,3.7vw,17px);line-height:1.35;cursor:pointer}
+.paywall-actions button:nth-child(2){border-color:#dce9e5;background:#dce9e5}
+.paywall-actions button:nth-child(3){border-color:#004b51;background:#004b51;color:#fff}
+.paywall-notice{min-height:1.5em;margin:12px 0 0;text-align:center;color:#66777a;font-size:12px}
