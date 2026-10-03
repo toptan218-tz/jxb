@@ -354,7 +354,7 @@ function renderPatterns81() {
     </div>
     <h3 class="patterns81-pattern-name">${escapeHtml(patternName)}</h3>
     <p class="patterns81-summary">${escapeHtml(summary)}</p>
-    ${detailLines.length ? `<p class="patterns81-detail">${detailLines.map(escapeHtml).join("<br>")}</p>` : ""}
+    ${detailLines.length ? `<p class="patterns81-summary">${detailLines.map(escapeHtml).join("<br>")}</p>` : ""}
   `;
 }
 
