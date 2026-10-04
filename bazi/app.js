@@ -935,10 +935,7 @@ function initEntryInteractions() {
   $("#closeDuiyuanPage").addEventListener("click", closeDuiyuanPage);
   $("#closePaywallPage").addEventListener("click", closePaywallPage);
   $("#upgradeMember").addEventListener("click", openPaywallPage);
-  document.querySelectorAll("[data-paywall-action]").forEach((button) => button.addEventListener("click", () => {
-    if (button.dataset.paywallAction === "free") closePaywallPage();
-    else $("#paywallNotice").textContent = "在线开通暂未接入，请稍后再试。";
-  }));
+
   $("#toggleDuiyuanApply").addEventListener("click", toggleDuiyuanApply);
 }
 
@@ -1788,7 +1785,7 @@ showPage("input", {keepPrevious: true});
   }
 
   function showOverlay(plan) {
-    QR_TITLE.textContent = PLAN_LABEL[plan] || '扫码支付';
+    QR_TITLE.textContent =  '扫码支付';
     QR_STATUS.textContent = '等待支付中…';
     QR_STATUS.className = 'qr-status';
     QR_OVERLAY.classList.remove('hidden');

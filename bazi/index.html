@@ -199,7 +199,7 @@
           <strong id="memberFooterLevel">基础版</strong>
           <small id="memberFooterNote">免费使用</small>
         </div>
-        <button id="upgradeMember" class="member-footer-upgrade" type="button">升级会员 <span aria-hidden="true">›</span></button>
+        <button id="upgradeMember" class="member-footer-upgrade" type="button">升级/续费 <span aria-hidden="true">›</span></button>
       </aside>
 
       <section id="queryPage" class="query-page hidden" aria-label="查询存档">
@@ -254,13 +254,30 @@
         <p class="paywall-note">所有秘传内容都属归元命理独有。非归元命理学员，酌情购买。</p>
         <div class="paywall-actions">
           <button type="button" data-paywall-action="free">免费使用</button>
-          <button type="button" data-paywall-action="advanced">¥198 / 年<br>立即开通 ›</button>
-          <button type="button" data-paywall-action="professional">¥298 / 年<br>立即开通 ›</button>
+          <button type="button" data-paywall-action="advanced">¥198 / 年</button>
+          <button type="button" data-paywall-action="professional">¥298 / 年</button>
+        </div>
+        <div style="
+    margin: 0 auto;
+    padding: 30px;
+    width: 100%;
+    text-align: center;
+">补差价即可升级会员</div>
+        <!-- 放在 paywallPage 的 paywall-actions 之后 -->
+        <div id="qrOverlay" class="qr-overlay hidden">
+          <div class="qr-panel">
+            <h3 id="qrTitle">扫码支付</h3>
+            <div id="qrBox" class="qr-box"></div>
+            <p id="qrTip" class="qr-tip">请使用微信扫码完成支付</p>
+            <p id="qrStatus" class="qr-status">等待支付中…</p>
+            <button id="qrClose" type="button">关闭</button>
+          </div>
         </div>
         <p id="paywallNotice" class="paywall-notice" role="status"></p>
       </section>
 
     </main>
+    <script src="../vendor/qrcode.js"></script>
 
     <script src="../vendor/iztro.min.js"></script>
     <script src="./app.js?v=20261003-member-footer"></script>
