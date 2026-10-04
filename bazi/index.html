@@ -257,12 +257,23 @@
           <button type="button" data-paywall-action="advanced">¥198 / 年<br>立即开通 ›</button>
           <button type="button" data-paywall-action="professional">¥298 / 年<br>立即开通 ›</button>
         </div>
+        <!-- 放在 paywallPage 的 paywall-actions 之后 -->
+        <div id="qrOverlay" class="qr-overlay hidden">
+          <div class="qr-panel">
+            <h3 id="qrTitle">扫码支付</h3>
+            <div id="qrBox" class="qr-box"></div>
+            <p id="qrTip" class="qr-tip">请使用微信扫码完成支付</p>
+            <p id="qrStatus" class="qr-status">等待支付中…</p>
+            <button id="qrClose" type="button">关闭</button>
+          </div>
+        </div>
         <p id="paywallNotice" class="paywall-notice" role="status"></p>
       </section>
 
     </main>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="../vendor/iztro.min.js"></script>
+
     <script src="./app.js?v=20261003-member-footer"></script>
   <script src="../simple.js?v=20261003-member-footer"></script>
 </body>
