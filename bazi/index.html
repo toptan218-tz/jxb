@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>四柱干支历</title>
     <link rel="stylesheet" href="./styles.css?v=20260929-member-response" />
-  <link rel="stylesheet" href="../simple.css?v=20260929-member-tiers">
+  <link rel="stylesheet" href="../simple.css?v=20261003-member-footer">
 </head>
   <body>
     <main class="phone">
@@ -192,6 +192,16 @@
       </nav>
       </div>
 
+      <aside id="memberFooter" class="member-footer" aria-label="当前会员等级">
+        <span class="member-footer-symbol" aria-hidden="true">☯</span>
+        <div class="member-footer-status">
+          <span>当前会员</span>
+          <strong id="memberFooterLevel">基础版</strong>
+          <small id="memberFooterNote">免费使用</small>
+        </div>
+        <button id="upgradeMember" class="member-footer-upgrade" type="button">升级会员 <span aria-hidden="true">›</span></button>
+      </aside>
+
       <section id="queryPage" class="query-page hidden" aria-label="查询存档">
         <div class="query-backbar">
           <button id="closeQueryPage" type="button" aria-label="返回">‹</button>
@@ -237,9 +247,9 @@
           </div>
           <div class="paywall-row" role="row"><span role="rowheader">案例存档</span><span role="cell">5 条</span><span role="cell">500 条</span><span role="cell">无限制</span></div>
           <div class="paywall-row" role="row"><span role="rowheader">基础排盘工具</span><span role="cell">✓</span><span role="cell">✓</span><span role="cell">✓</span></div>
-          <div class="paywall-row" role="row"><span role="rowheader">秘传兑元口诀</span><span role="cell">体验版</span><span role="cell">完整版</span><span role="cell">完整版</span></div>
-          <div class="paywall-row" role="row"><span role="rowheader">藏干分数</span><span role="cell" class="unavailable">—</span><span role="cell">✓</span><span role="cell">✓</span></div>
-          <div class="paywall-row" role="row"><span role="rowheader">运程计分</span><span role="cell" class="unavailable">—</span><span role="cell" class="unavailable">—</span><span role="cell">✓</span></div>
+          <div class="paywall-row" role="row"><span role="rowheader">秘传兑元口诀<small>极高准度，铁口直断</small></span><span role="cell">体验版</span><span role="cell">完整版</span><span role="cell">完整版</span></div>
+          <div class="paywall-row" role="row"><span role="rowheader">秘传藏干信息<small>喜忌立判，生克直断</small></span><span role="cell" class="unavailable">—</span><span role="cell">✓</span><span role="cell">✓</span></div>
+          <div class="paywall-row" role="row"><span role="rowheader">秘传运程计算<small>情感细辩，精断婚期</small></span><span role="cell" class="unavailable">—</span><span role="cell" class="unavailable">—</span><span role="cell">✓</span></div>
         </div>
         <p class="paywall-note">所有秘传内容都属归元命理独有。非归元命理学员，酌情购买。</p>
         <div class="paywall-actions">
@@ -253,7 +263,7 @@
     </main>
 
     <script src="../vendor/iztro.min.js"></script>
-    <script src="./app.js?v=20260930-api-domain"></script>
-  <script src="../simple.js?v=20260930-api-domain"></script>
+    <script src="./app.js?v=20261003-member-footer"></script>
+  <script src="../simple.js?v=20261003-member-footer"></script>
 </body>
 </html>

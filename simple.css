@@ -47,11 +47,16 @@ body[data-page] .timeline-item .timeline-ganzhi .el-火{color:var(--fire)}
 body[data-page] .timeline-item .timeline-ganzhi .el-土{color:var(--earth)}
 body[data-page] .timeline-item .timeline-ganzhi .el-金{color:var(--metal)}
 body[data-page] .timeline-item .timeline-ganzhi .el-水{color:var(--water)}
-.simple-fortune-nav{display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);z-index:25;background:var(--page);border-top:1px solid var(--line);padding:8px 12px max(10px,env(safe-area-inset-bottom));grid-template-columns:repeat(3,1fr)}
-body[data-page=chart] .simple-fortune-nav{display:grid}
-.simple-fortune-nav button{position:relative;background:transparent;border:0;color:var(--ink);min-height:48px;font-size:20px}
-.simple-fortune-nav button[aria-pressed=true]::after{content:'';position:absolute;bottom:0;left:calc(50% - 3px);width:6px;height:6px;background:#ad4937;border-radius:50%}
-body[data-page=chart] .result-area{padding-bottom:92px}.fortune-tier,.chart-card{scroll-margin-top:72px}
+.member-footer{display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);box-sizing:border-box;width:min(480px,100%);z-index:25;grid-template-columns:52px minmax(110px,1fr) minmax(150px,1.7fr);align-items:center;gap:12px;padding:12px 16px max(12px,env(safe-area-inset-bottom));background:var(--page);border-top:1px solid var(--line);color:var(--ink)}
+body[data-page=chart] .member-footer{display:grid}
+.member-footer-symbol{display:block;font-size:48px;line-height:1;color:#07504c;text-align:center}
+.member-footer-status{display:flex;flex-direction:column;gap:2px;min-width:0;padding-left:12px;border-left:1px solid var(--line)}
+.member-footer-status>span,.member-footer-status small{font-size:13px;color:var(--muted)}
+.member-footer-status strong{font-family:'Noto Serif CJK SC','Songti SC','SimSun',serif;font-size:21px;font-weight:600;white-space:nowrap}
+.member-footer-upgrade{display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;border:0;border-radius:18px;background:#07504c;color:#fff;font-family:'Noto Serif CJK SC','Songti SC','SimSun',serif;font-size:21px;font-weight:600;white-space:nowrap;cursor:pointer}
+.member-footer-upgrade span{font-family:Arial,sans-serif;font-size:32px;line-height:1;color:#f0c581}
+body[data-page=chart] .result-area{padding-bottom:126px}.fortune-tier,.chart-card{scroll-margin-top:72px}
+@media(max-width:360px){.member-footer{grid-template-columns:38px minmax(88px,1fr) minmax(130px,1.5fr);gap:8px;padding-inline:10px}.member-footer-symbol{font-size:38px}.member-footer-status{padding-left:8px}.member-footer-status strong{font-size:18px}.member-footer-upgrade{font-size:18px;min-height:52px}}
 .simple-home{display:flex;min-height:100svh;flex-direction:column;justify-content:flex-start;padding:17svh 18px 40px;gap:8svh}
 .simple-home-title{display:flex;align-items:center;justify-content:center;gap:28px;text-align:center;font-size:18px;margin:0;color:var(--ink);font-weight:400!important;letter-spacing:.34em;white-space:nowrap}
 .simple-home-title i{display:block;width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:var(--accent)}
@@ -324,6 +329,7 @@ body .fortune-score-cell.locked,body .fortune-score-cell.locked span{color:#b7b7
 .paywall-row+.paywall-row{border-top:1px solid #dce3e0}
 .paywall-row>*{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;padding:5px 2px;border-left:1px solid #e0e6e3;text-align:center;font-size:clamp(13px,3.5vw,17px)}
 .paywall-row>*:first-child{align-items:flex-start;border-left:0;padding-left:10px;text-align:left;font-size:clamp(13px,3.5vw,17px)}
+.paywall-row [role="rowheader"] small{display:block;margin-top:3px;color:#60777b;font-size:clamp(9px,2.4vw,11px);font-weight:400;line-height:1.25}
 .paywall-row>*:last-child{background:rgba(219,239,233,.45)}
 .paywall-heading{min-height:83px;font-weight:600}
 .paywall-heading>*{font-size:clamp(16px,4.1vw,20px)}

@@ -112,30 +112,10 @@
     formatResult();
   }
   if(document.querySelector('#resultArea')) {
-    const nav=document.createElement('nav');
-    nav.className='simple-fortune-nav';nav.setAttribute('aria-label','盘面与运程');
-    nav.innerHTML='<button type="button" data-mode="base" aria-pressed="true">原局</button><button type="button" data-mode="luck" aria-pressed="false">大运</button><button type="button" data-mode="year" aria-pressed="false">流年</button>';
-    document.body.append(nav);
-    nav.addEventListener('click',e=>{
-      const button=e.target.closest('[data-mode]');if(!button)return;
-      if(button.dataset.mode==='base')removePillarLevel(1);
-      const target=button.dataset.mode==='base'?document.querySelector('.chart-card'):document.querySelector(button.dataset.mode==='luck'?'#luckStrip':'#yearStrip').closest('.fortune-tier');
-      nav.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
-      target.scrollIntoView({behavior:'smooth',block:'start'});
-    });
-    document.querySelector('.fortune-card').addEventListener('click',e=>{
-      const b=e.target.closest('[data-type]');if(!b)return;
-      const selected=[...document.querySelectorAll('.timeline-item.active')].some(x=>x.dataset.type===b.dataset.type && x.dataset.key===b.dataset.key);
-      if(!selected)return;
-      const mode=b.dataset.type==='luck'?'luck':'year';
-      nav.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===mode)));
-    });
     new MutationObserver(()=>{
       const labels=[...document.querySelectorAll('#baziGrid .pillar-label')].map(x=>x.textContent);
-      const mode=labels.includes('流年')?'year':labels.includes('大运')?'luck':'base';
       document.querySelector('.chart-card')?.classList.toggle('has-added-pillars',labels.length>4);
       document.querySelector('.chart-card')?.classList.toggle('has-eight-pillars',labels.length===8 && labels.includes('流日'));
-      nav.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===mode)));
       document.querySelectorAll('#monthStrip button').forEach(x=>{x.disabled=!labels.includes('流年');x.title=x.disabled?'请先选择流年':'';});
       document.querySelectorAll('#dayStrip button').forEach(x=>{x.disabled=!labels.includes('流月');x.title=x.disabled?'请先选择流月':'';});
     }).observe(document.querySelector('#baziGrid'),{childList:true});
